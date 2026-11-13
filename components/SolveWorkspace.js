@@ -654,36 +654,6 @@ export default function SolveWorkspace({ challenge }) {
             {solved ? "Solved" : "In progress"}
           </span>
 
-          <button
-            type="button"
-            onClick={handleLinerNotes}
-            disabled={linerState === "loading"}
-            title="Spoken audio intuition"
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.16em] transition-colors ${
-              linerState === "playing"
-                ? "border-accent text-accent bg-accent/10"
-                : linerState === "loading"
-                  ? "border-paper/20 text-paper/40"
-                  : "border-paper/20 text-paper/70 hover:border-accent/50 hover:text-accent"
-            }`}
-          >
-            {linerState === "loading" ? (
-              <span className="h-3 w-3 animate-spin rounded-full border border-paper/20 border-t-accent" />
-            ) : linerState === "playing" ? (
-              <span className="flex items-end gap-0.5" aria-hidden="true">
-                <span className="h-2 w-0.5 animate-pulse bg-accent" />
-                <span className="h-3 w-0.5 animate-pulse bg-accent [animation-delay:120ms]" />
-                <span className="h-2.5 w-0.5 animate-pulse bg-accent [animation-delay:240ms]" />
-              </span>
-            ) : (
-              <span aria-hidden="true">♪</span>
-            )}
-            {linerState === "playing" ? "Stop" : "Liner Notes"}
-            {linerState === "idle" ? (
-              <span className="text-paper/30">(&gt; Audio)</span>
-            ) : null}
-          </button>
-
           <Link
             href="/challenges"
             className="hidden font-mono text-[9px] uppercase tracking-[0.18em] text-paper/35 transition-colors hover:text-paper/70 md:inline"
@@ -740,15 +710,50 @@ export default function SolveWorkspace({ challenge }) {
                 </span>
               </div>
 
-              <button
-                type="button"
-                onClick={handleRun}
-                disabled={running}
-                className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-[12px] font-semibold text-ink transition-all hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
-              >
-                <Play className="h-3 w-3" />
-                {running ? "Running…" : "Run Code"}
-              </button>
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={handleLinerNotes}
+                  disabled={linerState === "loading"}
+                  title="Listen to AI voice walkthrough of this challenge"
+                  className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[11px] font-medium transition-all ${
+                    linerState === "playing"
+                      ? "border-accent bg-accent/20 text-accent shadow-sm shadow-accent/20"
+                      : linerState === "loading"
+                        ? "border-paper/20 bg-paper/5 text-paper/40 cursor-wait"
+                        : "border-paper/20 bg-paper/5 text-paper/85 hover:border-accent hover:text-accent hover:bg-accent/10"
+                  }`}
+                >
+                  {linerState === "loading" ? (
+                    <span className="h-3 w-3 animate-spin rounded-full border border-paper/20 border-t-accent" />
+                  ) : linerState === "playing" ? (
+                    <span className="flex items-end gap-0.5 h-3" aria-hidden="true">
+                      <span className="h-2 w-0.5 animate-pulse bg-accent" />
+                      <span className="h-3 w-0.5 animate-pulse bg-accent [animation-delay:150ms]" />
+                      <span className="h-2.5 w-0.5 animate-pulse bg-accent [animation-delay:300ms]" />
+                    </span>
+                  ) : (
+                    <span className="text-[12px]" aria-hidden="true">🎧</span>
+                  )}
+                  <span>
+                    {linerState === "playing"
+                      ? "Stop Audio"
+                      : linerState === "loading"
+                        ? "Generating…"
+                        : "Listen to Liner Notes"}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleRun}
+                  disabled={running}
+                  className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-[12px] font-semibold text-ink transition-all hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
+                >
+                  <Play className="h-3 w-3" />
+                  {running ? "Running…" : "Run Code"}
+                </button>
+              </div>
             </div>
 
             <div
