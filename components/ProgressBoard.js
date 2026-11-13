@@ -13,6 +13,11 @@ import {
   getActiveProgress,
   getSolvedChallengeIds,
 } from "@/lib/progress";
+import SplitFlapDisplay from "@/components/ui/split-flap-display";
+import OrbitCardStack from "@/components/ui/orbit-card-stack";
+import GithubCalendar from "@/components/ui/github-calendar";
+import ScrollBasedVelocity from "@/components/ui/scroll-based-velocity";
+import KineticTextReveal from "@/components/ui/kinetic-text-reveal";
 
 const pad = (value) => String(value).padStart(2, "0");
 
@@ -133,27 +138,85 @@ export default function ProgressBoard({ challenges }) {
     setStats(fresh.stats);
   }
 
+  const uncompletedChallenges = challenges.filter((c) => !solvedSet.has(c.id));
+  const candidateChallenges = uncompletedChallenges.length >= 5
+    ? uncompletedChallenges
+    : challenges;
+
+  const orbitCards = candidateChallenges.slice(0, 5).map((c, i) => ({
+    id: c.id,
+    title: c.title,
+    role: `${c.language.toUpperCase()} · ${c.category || "CORE"}`,
+    description: c.description,
+    stat: c.difficulty.toUpperCase(),
+    accent: ["#d9f65a", "#78dcca", "#b9a7ff", "#f8d66d", "#ff9d77"][i % 5],
+    href: `/challenges/${c.id}/solve`,
+    solved: solvedSet.has(c.id),
+  }));
+
   return (
     <div>
-      <section className="mb-6 grid grid-cols-2 gap-px overflow-hidden rounded-[3px] border border-paper/10 bg-paper/10 sm:grid-cols-4">
-        {[
-          { label: "XP", value: xp, hint: "+10 per first solve" },
-          { label: "Daily streak", value: `${streak}d`, hint: "consecutive solve days" },
-          { label: "Hints used", value: hintsUsed, hint: "across all pressings" },
-          { label: "Run attempts", value: totalAttempts, hint: "all challenges" },
-        ].map((item) => (
-          <div key={item.label} className="bg-ink-2 px-5 py-4">
-            <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
-              {item.label}
-            </p>
-            <p className="mt-2 font-display text-[clamp(1.7rem,3vw,2.2rem)] leading-none tracking-[-0.03em]">
-              {loaded ? item.value : "—"}
-            </p>
-            <p className="mt-1.5 font-mono text-[7px] uppercase tracking-[0.14em] text-paper/40">
-              {item.hint}
-            </p>
+      {/* 1. Solari Split-Flap Analog Telemetry Board */}
+      <section className="mb-8 rounded-[3px] border border-paper/10 bg-black/40 p-5">
+        <div className="flex items-center justify-between mb-4 border-b border-paper/10 pb-2.5">
+          <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-accent font-semibold flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+            Solari Telemetry Readout · Station 02
+          </span>
+          <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30 hidden sm:inline">
+            Live Account Progress Telemetry
+          </span>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="flex flex-col gap-1.5">
+            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
+              XP Balance
+            </span>
+            <SplitFlapDisplay
+              text={`${String(xp).padStart(5, "0")} XP`}
+              columns={8}
+              size="sm"
+              accentColor="#d9f65a"
+            />
           </div>
-        ))}
+
+          <div className="flex flex-col gap-1.5">
+            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
+              Daily Streak
+            </span>
+            <SplitFlapDisplay
+              text={`${String(streak).padStart(2, "0")} DAYS`}
+              columns={7}
+              size="sm"
+              accentColor="#d9f65a"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
+              Challenges Solved
+            </span>
+            <SplitFlapDisplay
+              text={`${String(solvedCount).padStart(2, "0")} SOLVED`}
+              columns={9}
+              size="sm"
+              accentColor="#d9f65a"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
+              Run Attempts
+            </span>
+            <SplitFlapDisplay
+              text={`${String(totalAttempts).padStart(3, "0")} RUNS`}
+              columns={8}
+              size="sm"
+              accentColor="#d9f65a"
+            />
+          </div>
+        </div>
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
@@ -268,6 +331,55 @@ export default function ProgressBoard({ challenges }) {
           </div>
         </section>
       </div>
+
+      {/* GitHub Solve Activity Telemetry Heatmap */}
+      <div className="mt-8 mb-6">
+        <GithubCalendar
+          solvedCount={solvedCount}
+          streak={streak}
+          username="Studio Account"
+        />
+      </div>
+
+      {/* Retro-Vinyl Spine Marquee */}
+      <div className="my-8 py-2 border-y border-paper/10 bg-black/50 text-paper/40 font-mono text-[9px] uppercase tracking-[0.24em] overflow-hidden">
+        <ScrollBasedVelocity
+          text="HEXBIT PROGRESS CRATE · 1050 CHALLENGES · REAL TEST TELEMETRY · 10 RUNTIMES · ZERO RESUME FLUFF · "
+          default_velocity={2.5}
+          className="text-paper/40 hover:text-accent transition-colors"
+        />
+      </div>
+
+      {/* Orbit Card Stack - Next Pressings Queue */}
+      <section className="my-8 relative overflow-hidden rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-accent font-semibold">
+                Orbit Card Stack
+              </span>
+              <span className="rounded-full bg-accent/10 px-2 py-0.5 font-mono text-[7px] uppercase tracking-wider text-accent border border-accent/20">
+                Next In Queue
+              </span>
+            </div>
+            <h3 className="mt-1 font-display text-[22px] text-paper">
+              <KineticTextReveal text="Next Pressings in Your Crate" blur={true} />
+            </h3>
+            <p className="font-mono text-[11px] text-paper/50">
+              Hover to fan out and orbit through upcoming challenge pressings.
+            </p>
+          </div>
+          <span className="font-mono text-[9px] uppercase tracking-wider text-paper/30">
+            Scrub with ← → · Click to Solve
+          </span>
+        </div>
+
+        <OrbitCardStack
+          items={orbitCards}
+          defaultActiveIndex={2}
+          spread={155}
+        />
+      </section>
 
       <section className="mt-10">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-paper/10 bg-ink-2 px-5 py-3.5">
