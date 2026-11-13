@@ -10,6 +10,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { AUTH_EVENT, PROGRESS_EVENT } from "@/lib/auth";
 import { coverStyle, getDifficulty, getLanguage } from "@/lib/ui";
 import { Check, ChevronLeft, ChevronRight } from "@/components/icons";
+import OrbitCardStack from "@/components/ui/orbit-card-stack";
 
 const pad = (value) => String(value).padStart(2, "0");
 
@@ -23,6 +24,8 @@ export default function ShelfView({ challenges }) {
   });
   const [activeIndex, setActiveIndex] = useState(0);
   const [solvedIds, setSolvedIds] = useState([]);
+  const [chapterViewMode, setChapterViewMode] = useState("orbit");
+  const [challengeViewMode, setChallengeViewMode] = useState("orbit");
 
   useEffect(() => {
     function sync() {
@@ -83,6 +86,41 @@ export default function ShelfView({ challenges }) {
   const accentColor = viewState.selectedLanguage
     ? getLanguage(viewState.selectedLanguage).cover.accent
     : "#d4e157";
+
+  const chapterOrbitCards = chapterList.map((chapter, index) => ({
+    id: chapter.id,
+    title: chapter.title,
+    role: `GROOVE ${pad(index + 1)} · ${selectedLanguage?.name}`,
+    category: `${chapter.challenges.length} TRACKS`,
+    description: `Master ${chapter.title} in ${selectedLanguage?.name}. Contains ${chapter.challenges.length} test pressings.`,
+    stat: `${chapter.challenges.length} TRACKS`,
+    statusLabel: "Open Groove",
+    actionLabel: "Explore →",
+    accent: accentColor,
+    onClick: () => openChapter(chapter.id),
+  }));
+
+  const challengeOrbitCards = chapterChallenges.map((challenge, index) => {
+    const solved = solvedIds.includes(challenge.id);
+    const diffMeta = getDifficulty(challenge.difficulty);
+    return {
+      id: challenge.id,
+      title: challenge.title,
+      role: `LEVEL ${pad(index + 1)} · ${viewState.selectedLanguage?.toUpperCase()}`,
+      category: diffMeta.label.toUpperCase(),
+      difficulty: diffMeta.label,
+      description:
+        challenge.description ||
+        challenge.prompt ||
+        "Complete the implementation to satisfy all test pressings.",
+      stat: solved ? "SOLVED" : `${challenge.estimatedMinutes || 5} MIN`,
+      statusLabel: solved ? "✓ Solved" : "Ready to Solve",
+      actionLabel: "Audition →",
+      accent: diffMeta.hex || accentColor,
+      href: `/challenges/${challenge.id}/solve`,
+      solved,
+    };
+  });
 
   const currentItems =
     viewState.level === "languages"
@@ -373,27 +411,67 @@ export default function ShelfView({ challenges }) {
               </div>
             </div>
 
-            <div className="cd-panel mx-auto mt-10 flex max-w-2xl flex-col gap-2">
-              {chapterList.map((chapter, index) => (
+            <div className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-between gap-4">
+              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-paper/40">
+                LP Grooves Selection
+              </span>
+              <div className="flex items-center rounded-[3px] border border-paper/15 bg-ink p-0.5 font-mono text-[9px] uppercase tracking-wider">
                 <button
-                  key={chapter.id}
                   type="button"
-                  onClick={() => openChapter(chapter.id)}
-                  className="group flex items-center gap-4 rounded-[3px] border border-paper/12 bg-[#121410] px-4 py-3 text-left transition-colors hover:border-accent/40 cd-groove-row"
+                  onClick={() => setChapterViewMode("orbit")}
+                  className={`rounded-[2px] px-2.5 py-1 transition-colors ${
+                    chapterViewMode === "orbit"
+                      ? "bg-accent text-ink font-bold"
+                      : "text-paper/60 hover:text-paper"
+                  }`}
                 >
-                  <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/35">
-                    {pad(index + 1)}
-                  </span>
-                  <span className="font-display text-[15px] text-paper">
-                    {chapter.title}
-                  </span>
-                  <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.16em] text-paper/40">
-                    {chapter.challenges.length} track
-                    {chapter.challenges.length === 1 ? "" : "s"}
-                  </span>
+                  ✦ Orbit Fan-Out
                 </button>
-              ))}
+                <button
+                  type="button"
+                  onClick={() => setChapterViewMode("list")}
+                  className={`rounded-[2px] px-2.5 py-1 transition-colors ${
+                    chapterViewMode === "list"
+                      ? "bg-accent text-ink font-bold"
+                      : "text-paper/60 hover:text-paper"
+                  }`}
+                >
+                  ⊞ CD Grooves
+                </button>
+              </div>
             </div>
+
+            {chapterViewMode === "orbit" ? (
+              <div className="my-6">
+                <OrbitCardStack
+                  items={chapterOrbitCards}
+                  defaultActiveIndex={Math.floor(chapterOrbitCards.length / 2)}
+                  spread={150}
+                />
+              </div>
+            ) : (
+              <div className="cd-panel mx-auto mt-6 flex max-w-2xl flex-col gap-2">
+                {chapterList.map((chapter, index) => (
+                  <button
+                    key={chapter.id}
+                    type="button"
+                    onClick={() => openChapter(chapter.id)}
+                    className="group flex items-center gap-4 rounded-[3px] border border-paper/12 bg-[#121410] px-4 py-3 text-left transition-colors hover:border-accent/40 cd-groove-row"
+                  >
+                    <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/35">
+                      {pad(index + 1)}
+                    </span>
+                    <span className="font-display text-[15px] text-paper">
+                      {chapter.title}
+                    </span>
+                    <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.16em] text-paper/40">
+                      {chapter.challenges.length} track
+                      {chapter.challenges.length === 1 ? "" : "s"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
 
             <div className="mt-12 text-center">
               <button
@@ -457,36 +535,82 @@ export default function ShelfView({ challenges }) {
               </span>
             </h2>
 
-            <div className="mt-10 flex flex-col gap-2 cd-panel">
-              {chapterChallenges.map((challenge, index) => {
-                const solved = solvedIds.includes(challenge.id);
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-accent font-semibold">
+                  Orbit Card Stack · {chapterChallenges.length} Pressings
+                </span>
+                <p className="mt-0.5 font-mono text-[9px] text-paper/40">
+                  Hover to fan out or use ← → arrow keys to orbit through tracks
+                </p>
+              </div>
 
-                return (
-                  <button
-                    key={challenge.id}
-                    type="button"
-                    onClick={() => router.push(`/challenges/${challenge.id}/solve`)}
-                    className="group flex items-center gap-4 rounded-[3px] border border-paper/12 bg-[#121410] px-4 py-3 text-left transition-colors hover:border-accent/40 cd-groove-row"
-                  >
-                    <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/35">
-                      {pad(index + 1)}
-                    </span>
-                    <DifficultyBadge difficulty={challenge.difficulty} />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-display text-[15px] text-paper">
-                        {challenge.title}
-                      </span>
-                      <span className="mt-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
-                        {challenge.language} · {challenge.estimatedMinutes} min
-                      </span>
-                    </span>
-                    <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-paper/40">
-                      {solved ? "solved" : "open"}
-                    </span>
-                  </button>
-                );
-              })}
+              <div className="flex items-center rounded-[3px] border border-paper/15 bg-ink p-0.5 font-mono text-[9px] uppercase tracking-wider">
+                <button
+                  type="button"
+                  onClick={() => setChallengeViewMode("orbit")}
+                  className={`rounded-[2px] px-2.5 py-1 transition-colors ${
+                    challengeViewMode === "orbit"
+                      ? "bg-accent text-ink font-bold"
+                      : "text-paper/60 hover:text-paper"
+                  }`}
+                >
+                  ✦ Orbit Fan-Out
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setChallengeViewMode("list")}
+                  className={`rounded-[2px] px-2.5 py-1 transition-colors ${
+                    challengeViewMode === "list"
+                      ? "bg-accent text-ink font-bold"
+                      : "text-paper/60 hover:text-paper"
+                  }`}
+                >
+                  ⊞ Tracklist
+                </button>
+              </div>
             </div>
+
+            {challengeViewMode === "orbit" ? (
+              <div className="my-6">
+                <OrbitCardStack
+                  items={challengeOrbitCards}
+                  defaultActiveIndex={Math.min(2, Math.max(0, Math.floor(challengeOrbitCards.length / 2)))}
+                  spread={145}
+                />
+              </div>
+            ) : (
+              <div className="mt-6 flex flex-col gap-2 cd-panel">
+                {chapterChallenges.map((challenge, index) => {
+                  const solved = solvedIds.includes(challenge.id);
+
+                  return (
+                    <button
+                      key={challenge.id}
+                      type="button"
+                      onClick={() => router.push(`/challenges/${challenge.id}/solve`)}
+                      className="group flex items-center gap-4 rounded-[3px] border border-paper/12 bg-[#121410] px-4 py-3 text-left transition-colors hover:border-accent/40 cd-groove-row"
+                    >
+                      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/35">
+                        {pad(index + 1)}
+                      </span>
+                      <DifficultyBadge difficulty={challenge.difficulty} />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-display text-[15px] text-paper">
+                          {challenge.title}
+                        </span>
+                        <span className="mt-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
+                          {challenge.language} · {challenge.estimatedMinutes} min
+                        </span>
+                      </span>
+                      <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-paper/40">
+                        {solved ? "solved" : "open"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </section>
       ) : null}

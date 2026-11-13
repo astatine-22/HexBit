@@ -2,7 +2,6 @@ import ShelfView from "@/components/ShelfView";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { getChallenges } from "@/lib/challenges";
-import OrbitCardStack from "@/components/ui/orbit-card-stack";
 
 export const metadata = {
   title: "Challenges",
@@ -21,16 +20,6 @@ export default async function ChallengesPage() {
     },
     { easy: 0, medium: 0, hard: 0 }
   );
-
-  const featuredCards = (challenges || []).slice(0, 5).map((c, i) => ({
-    id: c.id,
-    title: c.title,
-    role: `${c.language.toUpperCase()} · ${c.category || "CORE"}`,
-    description: c.description,
-    stat: c.difficulty.toUpperCase(),
-    accent: ["#d9f65a", "#78dcca", "#b9a7ff", "#f8d66d", "#ff9d77"][i % 5],
-    href: `/challenges/${c.id}/solve`,
-  }));
 
   return (
     <>
@@ -97,36 +86,6 @@ export default async function ChallengesPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Orbit Card Stack Quick Showcase */}
-        <section className="relative border-y border-paper/10 bg-[#0c0d0a] py-8 overflow-hidden">
-          <div className="mx-auto max-w-7xl px-6 lg:px-10">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-accent font-semibold">
-                    Orbit Card Stack
-                  </span>
-                  <span className="rounded-full bg-accent/10 px-2 py-0.5 font-mono text-[7px] uppercase tracking-wider text-accent border border-accent/20">
-                    Interactive Fan-Out
-                  </span>
-                </div>
-                <h2 className="mt-1 font-display text-[24px] text-paper">
-                  Hover to fan out featured challenge pressings
-                </h2>
-              </div>
-              <p className="font-mono text-[9px] uppercase tracking-widest text-paper/40">
-                Hover or use ← → to orbit
-              </p>
-            </div>
-
-            <OrbitCardStack
-              items={featuredCards}
-              defaultActiveIndex={2}
-              spread={160}
-            />
           </div>
         </section>
 

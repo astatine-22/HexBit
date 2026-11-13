@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import DifficultyBadge from "@/components/DifficultyBadge";
 import LanguageMark from "@/components/LanguageMark";
@@ -18,6 +19,7 @@ import OrbitCardStack from "@/components/ui/orbit-card-stack";
 import GithubCalendar from "@/components/ui/github-calendar";
 import ScrollBasedVelocity from "@/components/ui/scroll-based-velocity";
 import KineticTextReveal from "@/components/ui/kinetic-text-reveal";
+import HarmonicRoadmap from "@/components/HarmonicRoadmap";
 
 const pad = (value) => String(value).padStart(2, "0");
 
@@ -26,6 +28,7 @@ function readProgressState() {
 
   return {
     solvedIds: getSolvedChallengeIds(),
+    unlockedPacks: progress?.unlockedPacks ?? [],
     stats: progress?.leaderboardStats ?? {
       xp: 0,
       streak: 0,
@@ -37,7 +40,9 @@ function readProgressState() {
 }
 
 export default function ProgressBoard({ challenges }) {
+  const router = useRouter();
   const [solvedIds, setSolvedIds] = useState(null);
+  const [unlockedPacks, setUnlockedPacks] = useState([]);
   const [stats, setStats] = useState(null);
   const [suggestion, setSuggestion] = useState(null);
   const [trackViewMode, setTrackViewMode] = useState("orbit");
@@ -46,6 +51,7 @@ export default function ProgressBoard({ challenges }) {
     function sync() {
       const next = readProgressState();
       setSolvedIds(next.solvedIds);
+      setUnlockedPacks(next.unlockedPacks);
       setStats(next.stats);
     }
 
@@ -157,6 +163,65 @@ export default function ProgressBoard({ challenges }) {
       solved: track.solved > 0,
     };
   });
+
+  const saptakSkills = [
+    {
+      name: "Syntax & Variables",
+      category: "Fundamental",
+      status: (solvedCount || 0) >= 1 ? "mastered" : "learning",
+      challengeId: challenges.find((c) => c.difficulty === "easy")?.id || "py-01",
+      matchPercentage: Math.min(100, Math.round(((solvedCount || 0) / 3) * 100)),
+      details: "Basic language statements, data types, variable declarations, and standard I/O.",
+    },
+    {
+      name: "Control Flow & Slices",
+      category: "Fundamental",
+      status: (solvedCount || 0) >= 3 ? "mastered" : "learning",
+      challengeId: challenges.find((c) => c.difficulty === "easy")?.id || "py-02",
+      matchPercentage: Math.min(100, Math.round(((solvedCount || 0) / 6) * 100)),
+      details: "Conditionals, iterative loops, string manipulation, and list slices.",
+    },
+    {
+      name: "Data Structures & Collections",
+      category: "Mid Harmonics",
+      status: (solvedCount || 0) >= 6 ? "mastered" : "learning",
+      challengeId: challenges.find((c) => c.difficulty === "medium")?.id || "py-03",
+      matchPercentage: Math.min(100, Math.round(((solvedCount || 0) / 10) * 100)),
+      details: "Hash maps, hash sets, queues, stacks, and associative lookup tables.",
+    },
+    {
+      name: "Functions & Recursion",
+      category: "Mid Harmonics",
+      status: (solvedCount || 0) >= 10 ? "mastered" : "learning",
+      challengeId: challenges.find((c) => c.difficulty === "medium")?.id || "py-04",
+      matchPercentage: Math.min(100, Math.round(((solvedCount || 0) / 15) * 100)),
+      details: "Higher-order functions, closures, recursive base cases, and decorators.",
+    },
+    {
+      name: "Object-Oriented & Modularity",
+      category: "Mid Harmonics",
+      status: (solvedCount || 0) >= 15 ? "mastered" : "learning",
+      challengeId: challenges.find((c) => c.difficulty === "medium")?.id || "py-05",
+      matchPercentage: Math.min(100, Math.round(((solvedCount || 0) / 20) * 100)),
+      details: "Classes, interfaces, inheritance, composition, and package encapsulation.",
+    },
+    {
+      name: "Concurrency & Event Loops",
+      category: "Overtones",
+      status: (solvedCount || 0) >= 20 ? "mastered" : "learning",
+      challengeId: challenges.find((c) => c.difficulty === "hard")?.id || "py-06",
+      matchPercentage: Math.min(100, Math.round(((solvedCount || 0) / 25) * 100)),
+      details: "Async/await routines, thread synchronization, channels, and non-blocking I/O.",
+    },
+    {
+      name: "Distributed Systems & Cloud",
+      category: "Overtones",
+      status: unlockedPacks.includes("pack-docker-k8s") ? "mastered" : "marketplace_gap",
+      packId: "pack-docker-k8s",
+      matchPercentage: unlockedPacks.includes("pack-docker-k8s") ? 100 : 0,
+      details: "Docker containers, Kubernetes pod topology, Redis caching, and Kafka streaming.",
+    },
+  ];
 
   return (
     <div>
@@ -353,6 +418,35 @@ export default function ProgressBoard({ challenges }) {
           className="text-paper/40 hover:text-accent transition-colors"
         />
       </div>
+
+      {/* Saptak Harmonic Frequency Acoustic Soundwave Roadmap */}
+      <section className="my-8 rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-4 border-b border-paper/10 pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-accent font-semibold">
+                Harmonic Frequency Spectrum · Saptak Scale
+              </span>
+              <span className="rounded-full bg-accent/10 px-2 py-0.5 font-mono text-[7px] uppercase tracking-wider text-accent border border-accent/20">
+                Acoustic Career Waves
+              </span>
+            </div>
+            <h3 className="mt-1 font-display text-[22px] text-paper">
+              <KineticTextReveal text="Harmonic Resonance Roadmap" blur={true} />
+            </h3>
+            <p className="font-mono text-[11px] text-paper/50">
+              Vibrating 7-note acoustic frequency ribbon. Neon nodes resonate with solved mastery; ghost bands link to the Marketplace Plugin Rack.
+            </p>
+          </div>
+        </div>
+
+        <HarmonicRoadmap
+          skills={saptakSkills}
+          unlockedPacks={unlockedPacks}
+          onOpenMarketplace={() => router.push("/matcher")}
+          onSelectChallenge={(challengeId) => router.push(`/challenges/${challengeId}/solve`)}
+        />
+      </section>
 
       {/* 2. Language Tracks - Interactive Orbit Card Stack & Grid View */}
       <section className="my-10 rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">

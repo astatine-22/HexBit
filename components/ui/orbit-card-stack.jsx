@@ -116,7 +116,9 @@ export function OrbitCardStack({
               onFocus={() => activate(index)}
               onClick={() => {
                 activate(index);
-                if (item.href && active) {
+                if (item.onClick) {
+                  item.onClick();
+                } else if (item.href && active) {
                   window.location.href = item.href;
                 }
               }}
@@ -133,8 +135,12 @@ export function OrbitCardStack({
                   activate(next);
                   stageRef.current?.querySelectorAll("[role=listitem]")[next]?.focus();
                 }
-                if (event.key === "Enter" && item.href) {
-                  window.location.href = item.href;
+                if (event.key === "Enter") {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else if (item.href) {
+                    window.location.href = item.href;
+                  }
                 }
                 if (event.key === "Escape") {
                   event.currentTarget.blur();
@@ -204,7 +210,19 @@ export function OrbitCardStack({
                     {item.statusLabel || (item.solved ? "✓ Mastered" : "Ready to Solve")}
                   </span>
 
-                  {item.href ? (
+                  {item.onClick ? (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        item.onClick();
+                      }}
+                      className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-wider text-paper hover:text-accent transition-colors"
+                    >
+                      <span>{item.actionLabel || "Open"}</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  ) : item.href ? (
                     <Link
                       href={item.href}
                       className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-wider text-paper hover:text-accent transition-colors"
