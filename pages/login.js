@@ -62,8 +62,8 @@ function validateField(field, values) {
       return "";
     }
     case "displayName": {
-      if (values.displayName.trim().length > 40) {
-        return "Display name must be 40 characters or fewer.";
+      if (values.displayName.trim().length > 30) {
+        return "Display name must be 30 characters or fewer.";
       }
 
       return "";
@@ -75,6 +75,10 @@ function validateField(field, values) {
 
       if (values.password.length < MIN_PASSWORD_LENGTH) {
         return `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+      }
+
+      if (values.password.length > 64) {
+        return "Password must be 64 characters or fewer.";
       }
 
       return "";
@@ -129,7 +133,10 @@ const inputClass =
 
 export default function LoginPage() {
   const router = useRouter();
-  const nextPath = useMemo(() => safeNext(router.query.next), [router.query.next]);
+const nextPath = useMemo(() => {
+  const raw = router.query.returnTo || router.query.next;
+  return safeNext(raw);
+}, [router.query.returnTo, router.query.next]);
 
   const [tab, setTab] = useState("login");
   const [values, setValues] = useState(EMPTY_VALUES);
@@ -310,7 +317,12 @@ export default function LoginPage() {
         return;
       }
 
-      router.push(nextPath);
+      // New signups go to onboarding calibration; migrating guests go to nextPath
+      if (!isMigrating) {
+        router.push("/onboarding");
+      } else {
+        router.push(nextPath);
+      }
     } finally {
       setBusy(false);
     }
@@ -708,7 +720,7 @@ export default function LoginPage() {
                 </button>
 
                 <p className="mt-4 text-center font-mono text-[8px] uppercase leading-relaxed tracking-[0.14em] text-paper/25">
-                  Demo accounts live in this browser only
+                  Demo accounts and progress are stored in this browser only.
                 </p>
               </section>
             </div>

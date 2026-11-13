@@ -1,0 +1,210 @@
+[
+  {
+    "id": "py-q1",
+    "language": "python",
+    "topic": "Syntax & Operators",
+    "format": "mcq",
+    "question": "Which of the following prints the value 5 in Python?",
+    "options": ["print(5)", "console.log(5)", "System.out.println(5)", "echo 5"],
+    "answer": [0],
+    "explanation": "Python uses the built-in print() function to write to stdout. console.log is JavaScript, System.out.println is Java, and echo is shell/PHP."
+  },
+  {
+    "id": "py-q2",
+    "language": "python",
+    "topic": "Control Flow",
+    "format": "boolean",
+    "question": "In Python, a for loop can iterate directly over a string's characters.",
+    "options": ["True", "False"],
+    "answer": [0],
+    "explanation": "Python strings are iterable, so `for ch in \"abc\":` yields 'a', 'b', 'c' in order."
+  },
+  {
+    "id": "py-q3",
+    "language": "python",
+    "topic": "Strings",
+    "format": "predict-output",
+    "code": "print(\"hello\"[::-1])",
+    "question": "What does this Python snippet print?",
+    "options": ["hello", "olleh", "error", "h e l l o"],
+    "answer": [1],
+    "explanation": "The slice [::-1] reverses the string by stepping backwards, so 'hello' becomes 'olleh'."
+  },
+  {
+    "id": "py-q4",
+    "language": "python",
+    "topic": "Collections & Arrays",
+    "format": "multi-select",
+    "question": "Which of these are valid ways to create a list in Python?",
+    "options": ["[1, 2, 3]", "list((1,2,3))", "{1, 2, 3}", "(1, 2, 3)"],
+    "answer": [0, 1],
+    "explanation": "Square brackets create a list literal and list() converts an iterable. {1,2,3} is a set and (1,2,3) is a tuple."
+  },
+  {
+    "id": "py-q5",
+    "language": "python",
+    "topic": "Dictionaries & Sets",
+    "format": "fix-bug",
+    "code": "d = {\"a\": 1, \"b\": 2}\nprint(d[\"c\"])",
+    "question": "This code raises a KeyError. Which line is the bug?",
+    "options": ["Line 1: dictionary literal", "Line 2: accessing missing key", "No bug", "Line 1: wrong brackets"],
+    "answer": [1],
+    "explanation": "Accessing a key that does not exist raises KeyError. Use d.get(\"c\") or check membership first."
+  },
+  {
+    "id": "js-q1",
+    "language": "javascript",
+    "topic": "Syntax & Operators",
+    "format": "mcq",
+    "question": "Which keyword declares a block-scoped variable in JavaScript?",
+    "options": ["var", "let", "const var", "def"],
+    "answer": [1],
+    "explanation": "let (and const) are block-scoped. var is function-scoped. def is Python."
+  },
+  {
+    "id": "js-q2",
+    "language": "javascript",
+    "topic": "Control Flow",
+    "format": "predict-output",
+    "code": "console.log(1 + \"2\");",
+    "question": "What does this print?",
+    "options": ["3", "\"12\"", "NaN", "error"],
+    "answer": [1],
+    "explanation": "The + operator coerces 1 to a string and concatenates, producing \"12\"."
+  },
+  {
+    "id": "js-q3",
+    "language": "javascript",
+    "topic": "Strings",
+    "format": "boolean",
+    "question": "Template literals in JavaScript use backticks and allow ${} interpolation.",
+    "options": ["True", "False"],
+    "answer": [0],
+    "explanation": "Template literals are delimited by backticks and support ${expression} interpolation."
+  },
+  {
+    "id": "ts-q1",
+    "language": "typescript",
+    "topic": "Syntax & Operators",
+    "format": "mcq",
+    "question": "TypeScript is a superset of which language?",
+    "options": ["Java", "JavaScript", "Python", "C#"],
+    "answer": [1],
+    "explanation": "TypeScript compiles to JavaScript and adds static typing."
+  },
+  {
+    "id": "ts-q2",
+    "language": "typescript",
+    "topic": "Types",
+    "format": "mcq",
+    "question": "Which type represents a value that is either string or number?",
+    "options": ["string & number", "string | number", "string || number", "Union<string, number>"],
+    "answer": [1],
+    "explanation": "Union types in TypeScript use the single pipe symbol |."
+  },
+  {
+    "id": "go-q1",
+    "language": "go",
+    "topic": "Syntax & Operators",
+    "format": "mcq",
+    "question": "Which operator performs short variable declaration and type inference in Go?",
+    "options": [":=", "=", "<-", "var"],
+    "answer": [0],
+    "explanation": "The := syntax is shorthand for declaring and initializing a variable with inferred type inside functions."
+  },
+  {
+    "id": "go-q2",
+    "language": "go",
+    "topic": "Functions",
+    "format": "boolean",
+    "question": "Go functions can return multiple values.",
+    "options": ["True", "False"],
+    "answer": [0],
+    "explanation": "Go natively supports multiple return values, commonly used to return a result alongside an error."
+  },
+  {
+    "id": "rust-q1",
+    "language": "rust",
+    "topic": "Variables",
+    "format": "boolean",
+    "question": "In Rust, variables are immutable by default.",
+    "options": ["True", "False"],
+    "answer": [0],
+    "explanation": "Rust variables are immutable by default; you must use `let mut` to make them mutable."
+  },
+  {
+    "id": "rust-q2",
+    "language": "rust",
+    "topic": "Memory",
+    "format": "mcq",
+    "question": "What core mechanism does Rust use to manage memory safety without a garbage collector?",
+    "options": ["Manual malloc/free", "Ownership and borrowing system", "Reference counting only", "Virtual Machine"],
+    "answer": [1],
+    "explanation": "Rust enforces memory safety at compile-time via its strict ownership, borrowing, and lifetime rules."
+  },
+  {
+    "id": "java-q1",
+    "language": "java",
+    "topic": "Syntax",
+    "format": "mcq",
+    "question": "Which method signature is the entry point for a Java application?",
+    "options": [
+      "public static void main(String[] args)",
+      "public void main(String[] args)",
+      "static int main()",
+      "void start()"
+    ],
+    "answer": [0],
+    "explanation": "The JVM looks specifically for public static void main(String[] args) as the application entry point."
+  },
+  {
+    "id": "java-q2",
+    "language": "java",
+    "topic": "Data Types",
+    "format": "boolean",
+    "question": "In Java, primitive type `int` is an object.",
+    "options": ["True", "False"],
+    "answer": [1],
+    "explanation": "int is a primitive value. Integer is its object wrapper class."
+  },
+  {
+    "id": "cpp-q1",
+    "language": "cpp",
+    "topic": "Syntax",
+    "format": "mcq",
+    "question": "Which stream object in <iostream> is standard for printing to console in C++?",
+    "options": ["std::cin", "std::cout", "std::print", "printf"],
+    "answer": [1],
+    "explanation": "std::cout (character output) combined with insertion operator << writes to stdout."
+  },
+  {
+    "id": "c-q1",
+    "language": "c",
+    "topic": "Pointers",
+    "format": "mcq",
+    "question": "Which operator is used to get the memory address of a variable in C?",
+    "options": ["*", "&", "->", "%"],
+    "answer": [1],
+    "explanation": "The ampersand & is the address-of operator; the asterisk * is used for dereferencing pointers."
+  },
+  {
+    "id": "ruby-q1",
+    "language": "ruby",
+    "topic": "Syntax",
+    "format": "boolean",
+    "question": "In Ruby, almost everything is an object, including integers and booleans.",
+    "options": ["True", "False"],
+    "answer": [0],
+    "explanation": "Ruby is a pure object-oriented language where even primitives like 5 are instances of Integer."
+  },
+  {
+    "id": "php-q1",
+    "language": "php",
+    "topic": "Variables",
+    "format": "mcq",
+    "question": "All variables in PHP must start with which symbol?",
+    "options": ["@", "#", "$", "&"],
+    "answer": [2],
+    "explanation": "In PHP, variable names always begin with a dollar sign $."
+  }
+]
