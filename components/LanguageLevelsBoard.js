@@ -88,8 +88,8 @@ export default function LanguageLevelsBoard() {
   if (!loaded) {
     return (
       <div className="flex min-h-[320px] items-center justify-center px-6 py-16">
-        <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-2">
-          <span className="h-3.5 w-3.5 animate-spin rounded-full border border-line border-t-ink" />
+        <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-paper/40">
+          <span className="h-3.5 w-3.5 animate-spin rounded-full border border-paper/10 border-t-ink" />
           Loading levels…
         </div>
       </div>
@@ -101,7 +101,7 @@ export default function LanguageLevelsBoard() {
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <Link
           href="/progress"
-          className="group inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition-colors hover:text-ink"
+          className="group inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-paper/60 transition-colors hover:text-paper"
         >
           <ArrowLeft className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-1" />
           Back to progress overview
@@ -109,13 +109,13 @@ export default function LanguageLevelsBoard() {
 
         <div className="flex flex-wrap items-center gap-3">
           <LanguageMark language={language} showLabel />
-          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-2">
+          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/40">
             {solvedCount} / {total} solved · {percentage}%
           </span>
         </div>
       </div>
 
-      <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-paper-3">
+      <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-white/10">
         <div
           className="h-full rounded-full bg-ink transition-[width] duration-500"
           style={{ width: `${percentage}%` }}
@@ -132,7 +132,7 @@ export default function LanguageLevelsBoard() {
               className={`rounded-full border px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] transition-colors ${
                 difficultyFilter === difficulty
                   ? "border-ink bg-ink text-paper"
-                  : "border-line text-muted hover:border-ink/40 hover:text-ink"
+                  : "border-paper/10 text-paper/60 hover:border-ink/40 hover:text-paper"
               }`}
             >
               {difficulty}
@@ -143,7 +143,7 @@ export default function LanguageLevelsBoard() {
         <select
           value={chapterFilter}
           onChange={(event) => setChapterFilter(event.target.value)}
-          className="rounded-full border border-line bg-white px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-muted transition-colors hover:border-ink/40 focus:border-ink/40 focus:outline-none"
+          className="rounded-full border border-paper/10 bg-ink-2 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-paper/60 transition-colors hover:border-paper/40 focus:border-paper/40 focus:outline-none"
         >
           {chapters.map((chapter) => (
             <option key={chapter} value={chapter}>
@@ -152,12 +152,12 @@ export default function LanguageLevelsBoard() {
           ))}
         </select>
 
-        <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.16em] text-muted-2">
+        <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.16em] text-paper/40">
           {filtered.length} shown
         </span>
       </div>
 
-      <ul className="divide-y divide-line overflow-hidden rounded-[3px] border border-line">
+      <ul className="divide-y divide-line overflow-hidden rounded-[3px] border border-paper/10">
         {filtered.map((challenge, index) => {
           const solved = solvedSet.has(challenge.id);
           const difficultyMeta = getDifficulty(challenge.difficulty);
@@ -166,9 +166,9 @@ export default function LanguageLevelsBoard() {
             <li key={challenge.id}>
               <Link
                 href={`/challenges/${challenge.id}/solve`}
-                className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-white/50"
+                className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-white/[0.03]"
               >
-                <span className="w-8 shrink-0 font-mono text-[9px] text-muted-2">
+                <span className="w-8 shrink-0 font-mono text-[9px] text-paper/40">
                   {pad(index + 1)}
                 </span>
 
@@ -176,7 +176,7 @@ export default function LanguageLevelsBoard() {
                   className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border transition-colors ${
                     solved
                       ? "border-[#2f7d58] bg-[#2f7d58] text-paper"
-                      : "border-line text-transparent"
+                      : "border-paper/10 text-transparent"
                   }`}
                   aria-label={solved ? "Solved" : "Not solved"}
                 >
@@ -187,7 +187,7 @@ export default function LanguageLevelsBoard() {
                   <span className="block truncate text-[14px] font-medium tracking-[-0.01em]">
                     {challenge.title}
                   </span>
-                  <span className="mt-0.5 block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-2">
+                  <span className="mt-0.5 block font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
                     {challenge.category} · {challenge.estimatedMinutes}m
                   </span>
                 </span>
@@ -196,11 +196,11 @@ export default function LanguageLevelsBoard() {
                   <DifficultyBadge difficulty={challenge.difficulty} />
                 </span>
 
-                <span className="hidden w-14 shrink-0 text-right font-mono text-[9px] text-muted-2 md:block">
+                <span className="hidden w-14 shrink-0 text-right font-mono text-[9px] text-paper/40 md:block">
                   {difficultyMeta.label}
                 </span>
 
-                <ArrowRight className="h-4 w-4 shrink-0 text-muted-2 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-ink" />
+                <ArrowRight className="h-4 w-4 shrink-0 text-paper/40 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-paper" />
               </Link>
             </li>
           );
@@ -208,7 +208,7 @@ export default function LanguageLevelsBoard() {
       </ul>
 
       {filtered.length === 0 ? (
-        <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-muted-2">
+        <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-paper/40">
           No levels match these filters.
         </p>
       ) : null}

@@ -55,7 +55,7 @@ export default function SolveGate({ challenge, children }) {
     }
   }
 
-  const next = pathname ? `?next=${encodeURIComponent(pathname)}` : "";
+  const next = pathname ? `?returnTo=${encodeURIComponent(pathname)}` : "";
 
   return (
     <div className="flex min-h-screen flex-col bg-[#0c0d0b] text-paper">

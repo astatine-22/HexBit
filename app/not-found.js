@@ -14,7 +14,7 @@ export default function NotFound() {
 
       <main
         id="main"
-        className="flex min-h-[62vh] items-center bg-paper px-6 py-16 lg:px-10"
+        className="flex min-h-[62vh] items-center bg-ink px-6 py-16 lg:px-10"
       >
         <div className="mx-auto w-full max-w-7xl">
           <div className="max-w-2xl">

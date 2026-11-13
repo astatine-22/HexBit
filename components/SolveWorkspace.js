@@ -3,12 +3,15 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "@/components/AuthProvider";
 import DifficultyBadge from "@/components/DifficultyBadge";
 import GuestBanner from "@/components/GuestBanner";
 import MentorPanel from "@/components/MentorPanel";
+import ThemeToggle from "@/components/ThemeToggle";
 import UserMenu from "@/components/UserMenu";
 import { ArrowLeft, Check, Play } from "@/components/icons";
 import { runCode } from "@/lib/executor";
+import { updateProgress } from "@/lib/auth";
 import {
   requestHint,
   getSolutionSummary,
@@ -23,6 +26,7 @@ import {
   recordHintRequest,
 } from "@/lib/progress";
 import { isAudioSupported, playLinerNotes, stopLinerNotes } from "@/lib/audio";
+import { isVoiceRecordingSupported, startRecording, stopRecording, cancelRecording } from "@/lib/voiceRecorder";
 import { getLanguage } from "@/lib/ui";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
@@ -81,6 +85,7 @@ function copyToClipboard(text) {
 }
 
 export default function SolveWorkspace({ challenge }) {
+  const { user, reloadUser } = useAuth();
   const language = getLanguage(challenge.language);
   const [code, setCode] = useState(challenge.starterCode);
   const [output, setOutput] = useState(null);
@@ -94,6 +99,12 @@ export default function SolveWorkspace({ challenge }) {
   const [linerState, setLinerState] = useState("idle");
   const [linerText, setLinerText] = useState(null);
   const [linerError, setLinerError] = useState("");
+  const [theme, setTheme] = useState("dark");
+  const [intercomState, setIntercomState] = useState("idle"); // idle | recording | thinking | speaking
+  const [intercomError, setIntercomError] = useState("");
+  const [intercomTranscript, setIntercomTranscript] = useState("");
+  const [intercomReply, setIntercomReply] = useState("");
+  const intercomAudioRef = useRef(null);
   const hintRequestCount = useRef(0);
   const editorRef = useRef(null);
   const shellRef = useRef(null);
@@ -137,8 +148,27 @@ export default function SolveWorkspace({ challenge }) {
   useEffect(() => {
     return () => {
       stopLinerNotes();
+      if (intercomAudioRef.current) {
+        try { intercomAudioRef.current.pause(); } catch (e) {}
+      }
+      cancelRecording();
     };
   }, []);
+
+  useEffect(() => {
+    function sync() {
+      try {
+        setTheme(document.documentElement.getAttribute("data-theme") || "dark");
+      } catch (e) {
+        // ignore
+      }
+    }
+    sync();
+    window.addEventListener("themechange", sync);
+    return () => window.removeEventListener("themechange", sync);
+  }, []);
+
+
 
   function handleEditorWillMount(monaco) {
     monaco.editor.defineTheme("codementor", {
@@ -554,6 +584,7 @@ export default function SolveWorkspace({ challenge }) {
           language: challenge.language,
           description: challenge.description,
           category: challenge.category,
+          experienceLevel: user?.progress?.experienceLevel || "beginner",
         }),
       });
       const data = await res.json();
@@ -570,19 +601,138 @@ export default function SolveWorkspace({ challenge }) {
         onEnd: () => setLinerState("idle"),
         onError: () => {
           setLinerState("idle");
-          // Keep linerText visible; only note that audio output was muted/unsupported
-          setLinerError("Spoken audio was blocked or unavailable on this device. Showing text below:");
+          setLinerError("Audio playback failed.");
         },
       });
 
       if (!started) {
         setLinerState("idle");
-        setLinerError("Speech synthesis is not supported on this device. Showing text below:");
+        setLinerError("Audio is not supported in this browser.");
       }
     } catch (error) {
       setLinerState("idle");
       setLinerError(error?.message || "Could not load liner notes.");
     }
+  }
+
+  function handleIntercomCancel() {
+    cancelRecording();
+    if (intercomAudioRef.current) {
+      try {
+        intercomAudioRef.current.pause();
+      } catch (e) {}
+      intercomAudioRef.current = null;
+    }
+    setIntercomState("idle");
+    setIntercomError("");
+  }
+
+  async function handleIntercomFinish() {
+    if (intercomState !== "recording") return;
+    setIntercomState("thinking");
+    setIntercomError("");
+    try {
+      const { audioBase64, mimeType } = await stopRecording();
+      if (!audioBase64) {
+        setIntercomState("idle");
+        setIntercomError("No audio recorded. Speak louder or longer and try again.");
+        return;
+      }
+
+      const res = await fetch("/api/voice-mentor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          audioBase64,
+          mimeType,
+          code,
+          errorMessage: output?.stderr || "",
+          language: challenge.language,
+          challengeTitle: challenge.title,
+          learningStyle: user?.progress?.learningStyle || "socratic",
+        }),
+      });
+      const data = await res.json();
+      const transcription = typeof data?.transcription === "string" ? data.transcription : "";
+      const reply = typeof data?.reply === "string" ? data.reply : "";
+      setIntercomTranscript(transcription);
+      setIntercomReply(reply);
+
+      if (data?.audioUrl) {
+        if (intercomAudioRef.current) {
+          try {
+            intercomAudioRef.current.pause();
+          } catch (e) {}
+        }
+        const audio = new Audio(data.audioUrl);
+        intercomAudioRef.current = audio;
+        audio.onended = () => {
+          intercomAudioRef.current = null;
+          setIntercomState("idle");
+        };
+        audio.onerror = () => {
+          intercomAudioRef.current = null;
+          setIntercomState("idle");
+          setIntercomError("Audio playback failed.");
+        };
+        setIntercomState("speaking");
+        try {
+          await audio.play();
+        } catch (e) {
+          setIntercomState("idle");
+          setIntercomError("Browser prevented autoplay. Click audio to hear reply.");
+        }
+      } else {
+        setIntercomState("idle");
+      }
+    } catch (error) {
+      setIntercomState("idle");
+      setIntercomError(error?.message || "Voice mentor failed.");
+    }
+  }
+
+  async function handleIntercomStart() {
+    if (intercomAudioRef.current) {
+      try {
+        intercomAudioRef.current.pause();
+      } catch (e) {}
+      intercomAudioRef.current = null;
+    }
+    setIntercomError("");
+    setIntercomTranscript("");
+    setIntercomReply("");
+    if (!isVoiceRecordingSupported()) {
+      setIntercomError("Microphone access is not supported in this browser.");
+      return;
+    }
+    try {
+      await startRecording();
+      setIntercomState("recording");
+    } catch (error) {
+      setIntercomState("idle");
+      setIntercomError(error?.message || "Could not access microphone.");
+    }
+  }
+
+  async function handleIntercomToggle() {
+    if (intercomState === "speaking") {
+      if (intercomAudioRef.current) {
+        try {
+          intercomAudioRef.current.pause();
+        } catch (e) {}
+        intercomAudioRef.current = null;
+      }
+      setIntercomState("idle");
+      return;
+    }
+    if (intercomState === "recording") {
+      await handleIntercomFinish();
+      return;
+    }
+    if (intercomState === "thinking") {
+      return;
+    }
+    await handleIntercomStart();
   }
   async function handleRequestHint({ snippet } = {}) {
     // TODO: replace with real API call to /api/hint
@@ -591,6 +741,8 @@ export default function SolveWorkspace({ challenge }) {
       userCode: snippet || code,
       errorMessage: snippet ? "" : output?.stderr || "",
       attemptCount: attempts + hintRequestCount.current,
+      learningStyle: user?.progress?.learningStyle || "socratic",
+      experienceLevel: user?.progress?.experienceLevel || "beginner",
     });
 
     hintRequestCount.current += 1;
@@ -661,7 +813,42 @@ export default function SolveWorkspace({ challenge }) {
             Shelf
           </Link>
 
+          <button
+            type="button"
+            onClick={handleLinerNotes}
+            disabled={linerState === "loading"}
+            title="Listen to vinyl liner notes walkthrough"
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.16em] transition-colors ${
+              linerState === "playing"
+                ? "border-accent bg-accent/20 text-accent shadow-sm shadow-accent/20"
+                : linerState === "loading"
+                  ? "border-paper/20 bg-paper/5 text-paper/40 cursor-wait"
+                  : "border-paper/20 text-paper/70 hover:border-accent/50 hover:text-accent"
+            }`}
+          >
+            {linerState === "loading" ? (
+              <span className="h-2.5 w-2.5 animate-spin rounded-full border border-paper/20 border-t-accent" />
+            ) : linerState === "playing" ? (
+              <span className="flex items-end gap-0.5 h-2.5" aria-hidden="true">
+                <span className="h-1.5 w-0.5 animate-pulse bg-accent" />
+                <span className="h-2.5 w-0.5 animate-pulse bg-accent [animation-delay:150ms]" />
+                <span className="h-2 w-0.5 animate-pulse bg-accent [animation-delay:300ms]" />
+              </span>
+            ) : (
+              <span className="text-[10px]" aria-hidden="true">🎧</span>
+            )}
+            <span>
+              {linerState === "playing"
+                ? "Stop Liner"
+                : linerState === "loading"
+                  ? "Generating…"
+                  : "Liner Notes"}
+            </span>
+          </button>
+
           <UserMenu />
+
+          <ThemeToggle />
         </div>
       </header>
 
@@ -690,6 +877,34 @@ export default function SolveWorkspace({ challenge }) {
         </div>
       ) : null}
 
+      {intercomState === "recording" || intercomTranscript || intercomReply || intercomError ? (
+        <div className="border-b border-paper/10 bg-ink-2/80 px-4 py-2.5 backdrop-blur lg:px-6">
+          <div className="mx-auto flex max-w-7xl flex-col gap-1">
+            {intercomState === "recording" ? (
+              <p className="flex items-center gap-2 text-[12px] text-[#ee917c]">
+                <span className="h-2 w-2 rounded-full bg-[#ee917c] animate-pulse" />
+                Listening to your microphone... Click &ldquo;Stop &amp; Ask&rdquo; when done speaking, or ✕ to cancel.
+              </p>
+            ) : null}
+            {intercomTranscript ? (
+              <p className="text-[12px] text-paper/60">
+                <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">You: </span>
+                {intercomTranscript}
+              </p>
+            ) : null}
+            {intercomReply ? (
+              <p className="text-[12px] text-paper/70">
+                <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-accent">Expert: </span>
+                {intercomReply}
+              </p>
+            ) : null}
+            {intercomError ? (
+              <p className="text-[12px] text-[#ee917c]">{intercomError}</p>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
       <GuestBanner />
 
       <main className="flex-1 px-3 py-3 sm:px-4 lg:px-5 lg:py-4">
@@ -711,38 +926,65 @@ export default function SolveWorkspace({ challenge }) {
               </div>
 
               <div className="flex items-center gap-2.5">
-                <button
-                  type="button"
-                  onClick={handleLinerNotes}
-                  disabled={linerState === "loading"}
-                  title="Listen to AI voice walkthrough of this challenge"
-                  className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[11px] font-medium transition-all ${
-                    linerState === "playing"
-                      ? "border-accent bg-accent/20 text-accent shadow-sm shadow-accent/20"
-                      : linerState === "loading"
-                        ? "border-paper/20 bg-paper/5 text-paper/40 cursor-wait"
-                        : "border-paper/20 bg-paper/5 text-paper/85 hover:border-accent hover:text-accent hover:bg-accent/10"
-                  }`}
-                >
-                  {linerState === "loading" ? (
-                    <span className="h-3 w-3 animate-spin rounded-full border border-paper/20 border-t-accent" />
-                  ) : linerState === "playing" ? (
-                    <span className="flex items-end gap-0.5 h-3" aria-hidden="true">
-                      <span className="h-2 w-0.5 animate-pulse bg-accent" />
-                      <span className="h-3 w-0.5 animate-pulse bg-accent [animation-delay:150ms]" />
-                      <span className="h-2.5 w-0.5 animate-pulse bg-accent [animation-delay:300ms]" />
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={handleIntercomToggle}
+                    disabled={intercomState === "thinking"}
+                    title={
+                      intercomState === "recording"
+                        ? "Click to finish and ask the expert"
+                        : intercomState === "speaking"
+                          ? "Click to stop expert voice"
+                          : intercomState === "thinking"
+                            ? "Expert is thinking..."
+                            : "Click to talk live with the expert tutor"
+                    }
+                    className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[11px] font-medium transition-all ${
+                      intercomState === "recording"
+                        ? "border-[#bf5741] text-[#ee917c] bg-[#bf5741]/10 animate-pulse shadow-sm shadow-[#bf5741]/20"
+                        : intercomState === "thinking"
+                          ? "border-paper/20 text-paper/40 cursor-wait bg-paper/5"
+                          : intercomState === "speaking"
+                            ? "border-[#7bddaa] text-[#7bddaa] bg-[#7bddaa]/10 hover:border-[#bf5741]/50"
+                            : "border-paper/20 bg-paper/5 text-paper/85 hover:border-accent hover:text-accent hover:bg-accent/10"
+                    }`}
+                  >
+                    {intercomState === "thinking" ? (
+                      <span className="h-3 w-3 animate-spin rounded-full border border-paper/20 border-t-accent" />
+                    ) : intercomState === "speaking" ? (
+                      <span className="flex items-end gap-0.5 h-3" aria-hidden="true">
+                        <span className="h-2 w-0.5 animate-pulse bg-[#7bddaa]" />
+                        <span className="h-3 w-0.5 animate-pulse bg-[#7bddaa] [animation-delay:120ms]" />
+                        <span className="h-2.5 w-0.5 animate-pulse bg-[#7bddaa] [animation-delay:240ms]" />
+                      </span>
+                    ) : intercomState === "recording" ? (
+                      <span className="h-2 w-2 rounded-full bg-[#ee917c] animate-ping" />
+                    ) : (
+                      <span className="text-[12px]" aria-hidden="true">🎙️</span>
+                    )}
+                    <span>
+                      {intercomState === "idle"
+                        ? "Talk with Expert"
+                        : intercomState === "recording"
+                          ? "Stop & Ask"
+                          : intercomState === "thinking"
+                            ? "Analyzing…"
+                            : "Speaking…"}
                     </span>
-                  ) : (
-                    <span className="text-[12px]" aria-hidden="true">🎧</span>
+                  </button>
+
+                  {intercomState === "recording" && (
+                    <button
+                      type="button"
+                      onClick={handleIntercomCancel}
+                      title="Cancel voice recording"
+                      className="inline-flex items-center justify-center rounded-full border border-paper/20 bg-ink-2 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-wider text-paper/50 hover:border-[#ee917c] hover:text-[#ee917c]"
+                    >
+                      ✕
+                    </button>
                   )}
-                  <span>
-                    {linerState === "playing"
-                      ? "Stop Audio"
-                      : linerState === "loading"
-                        ? "Generating…"
-                        : "Listen to Liner Notes"}
-                  </span>
-                </button>
+                </div>
 
                 <button
                   type="button"
@@ -767,7 +1009,7 @@ export default function SolveWorkspace({ challenge }) {
                 onChange={(value) => setCode(value ?? "")}
                 beforeMount={handleEditorWillMount}
                 onMount={handleEditorDidMount}
-                theme="codementor"
+                theme={theme === "light" ? "vs" : "codementor"}
                 options={EDITOR_OPTIONS}
               />
 
@@ -982,6 +1224,25 @@ export default function SolveWorkspace({ challenge }) {
             </section>
 
             <div className="min-h-[300px] flex-[1.08] lg:min-h-0">
+              <div className="mb-2 flex items-center gap-2">
+                <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
+                  Persona
+                </span>
+                <select
+                  value={user?.progress?.learningStyle || "socratic"}
+                  onChange={(e) => {
+                    if (user?.username) {
+                      updateProgress(user.username, { learningStyle: e.target.value });
+                      reloadUser?.();
+                    }
+                  }}
+                  className="rounded-full border border-paper/15 bg-ink-3 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-paper/70 focus:border-accent/60 focus:outline-none"
+                >
+                  <option value="socratic">🟢 Socratic Guide</option>
+                  <option value="direct">🟡 Co-Pilot Mode</option>
+                  <option value="strict">🟣 Staff Engineer</option>
+                </select>
+              </div>
               <MentorPanel
                 challengeId={challenge.id}
                 userCode={code}

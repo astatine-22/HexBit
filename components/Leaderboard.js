@@ -12,7 +12,7 @@ const pad = (value) => String(value).padStart(2, "0");
 function Stat({ label, value }) {
   return (
     <div>
-      <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-muted-2">
+      <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-paper/40">
         {label}
       </p>
       <p className="mt-1 font-display text-xl leading-none">{value}</p>
@@ -52,12 +52,12 @@ export default function Leaderboard() {
   return (
     <div>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
-        <section className="rounded-[3px] border border-line bg-white/40 p-6 lg:p-8">
+        <section className="rounded-[3px] border border-paper/10 bg-ink-2 p-6 text-paper lg:p-8">
           <div className="flex items-center justify-between gap-4">
-            <p className="font-mono text-[9px] uppercase tracking-[0.26em] text-muted-2">
+            <p className="font-mono text-[9px] uppercase tracking-[0.26em] text-paper/40">
               Ranked accounts
             </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-2">
+            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/40">
               {loaded ? `${ranked.length} on the board` : "reading…"}
             </p>
           </div>
@@ -67,12 +67,12 @@ export default function Leaderboard() {
               <span className="font-display text-[clamp(3.2rem,6vw,4.6rem)] leading-[0.8] tracking-[-0.04em]">
                 {loaded ? ranked.length : "—"}
               </span>
-              <span className="pb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+              <span className="pb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-paper/60">
                 accounts
               </span>
             </div>
 
-            <div className="grid flex-1 grid-cols-2 gap-4 border-l border-line pl-6 sm:grid-cols-3">
+            <div className="grid flex-1 grid-cols-2 gap-4 border-l border-paper/10 pl-6 sm:grid-cols-3">
               <Stat label="Total XP" value={loaded ? totalXp : "—"} />
               <Stat label="Solved" value={loaded ? totalSolved : "—"} />
               <Stat
@@ -82,14 +82,14 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          <p className="mt-6 border-t border-line pt-4 text-[13px] leading-relaxed text-muted">
+          <p className="mt-6 border-t border-paper/10 pt-4 text-[13px] leading-relaxed text-paper/60">
             Ranked by XP, then solved pressings, then streak. Only real accounts
             appear here — guest sessions are never ranked, so two guests can
             never collide under one name.
           </p>
         </section>
 
-        <section className="relative overflow-hidden rounded-[3px] bg-ink p-6 text-paper lg:p-8">
+        <section className="relative overflow-hidden rounded-[3px] border border-accent/30 bg-ink-3 p-6 text-paper lg:p-8">
           <div className="grain absolute inset-0 opacity-40" aria-hidden="true" />
 
           <div className="relative flex h-full flex-col">
@@ -125,18 +125,18 @@ export default function Leaderboard() {
         </section>
       </div>
 
-      <section className="mt-10 overflow-hidden rounded-[3px] border border-line">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-white/40 px-5 py-3.5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted">
+      <section className="mt-10 overflow-hidden rounded-xl border border-paper/10 bg-ink-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-paper/10 bg-ink-3/60 px-5 py-3.5">
+          <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-paper/60">
             The board · all ranked accounts
           </p>
-          <p className="font-mono text-[8px] uppercase tracking-[0.16em] text-muted-2">
+          <p className="font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
             displayName · codementor_users
           </p>
         </div>
 
         {!loaded ? (
-          <p className="px-5 py-10 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-muted-2">
+          <p className="px-5 py-10 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-paper/40">
             Reading the board…
           </p>
         ) : ranked.length === 0 ? (
@@ -144,7 +144,7 @@ export default function Leaderboard() {
             <p className="font-display text-2xl tracking-[-0.02em]">
               No ranked accounts yet.
             </p>
-            <p className="mx-auto mt-2 max-w-sm text-[13px] leading-relaxed text-muted">
+            <p className="mx-auto mt-2 max-w-sm text-[13px] leading-relaxed text-paper/60">
               Create an account or finish a challenge to put the first name on
               the board.
             </p>
@@ -160,7 +160,7 @@ export default function Leaderboard() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px] text-left">
               <thead>
-                <tr className="border-b border-line bg-paper-2/60 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-2">
+                <tr className="border-b border-paper/10 bg-ink-3/60 font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
                   <th className="px-5 py-3 font-normal">Rank</th>
                   <th className="px-3 py-3 font-normal">Account</th>
                   <th className="px-3 py-3 text-right font-normal">XP</th>
@@ -178,11 +178,27 @@ export default function Leaderboard() {
                     <tr
                       key={row.username}
                       className={
-                        isCurrent ? "bg-accent/15" : "transition-colors hover:bg-white/50"
+                        isCurrent ? "bg-accent/10 border-l-2 border-l-accent text-paper" : "transition-colors hover:bg-white/[0.03]"
                       }
                     >
-                      <td className="px-5 py-4 font-mono text-[10px] text-muted-2">
-                        {pad(row.rank)}
+                      <td className="px-5 py-4">
+                        {row.rank <= 3 ? (
+                          <span
+                            className={`inline-flex h-7 w-7 items-center justify-center rounded-full border font-mono text-[10px] font-semibold ${
+                              row.rank === 1
+                                ? "text-[#f0d06a] border-[#f0d06a]/30 bg-[#f0d06a]/10"
+                                : row.rank === 2
+                                  ? "text-[#e3ddcd] border-white/20 bg-white/5"
+                                  : "text-[#ee917c] border-[#ee917c]/30 bg-[#ee917c]/10"
+                            }`}
+                          >
+                            {pad(row.rank)}
+                          </span>
+                        ) : (
+                          <span className="font-mono text-[10px] text-paper/40">
+                            {pad(row.rank)}
+                          </span>
+                        )}
                       </td>
                       <td className="px-3 py-4">
                         <span className="flex items-center gap-2">
@@ -191,27 +207,27 @@ export default function Leaderboard() {
                           </span>
                           {isCurrent ? (
                             <span className="rounded-full border border-[#2f7d58]/25 bg-[#e3f2e9] px-2 py-0.5 font-mono text-[7px] uppercase tracking-[0.14em] text-[#1f6a48]">
-                              you
+                              YOU
                             </span>
                           ) : null}
                         </span>
-                        <span className="mt-0.5 block font-mono text-[8px] uppercase tracking-[0.14em] text-muted-2">
+                        <span className="mt-0.5 block font-mono text-[8px] uppercase tracking-[0.14em] text-paper/40">
                           @{row.username}
                         </span>
                       </td>
                       <td className="px-3 py-4 text-right font-display text-lg leading-none">
                         {row.xp}
                       </td>
-                      <td className="px-3 py-4 text-right font-mono text-[11px] text-muted">
+                      <td className="px-3 py-4 text-right font-mono text-[11px] text-paper/60">
                         {row.challengesSolved}
                       </td>
-                      <td className="px-3 py-4 text-right font-mono text-[11px] text-muted">
+                      <td className="px-3 py-4 text-right font-mono text-[11px] text-paper/60">
                         {row.streak}d
                       </td>
-                      <td className="px-3 py-4 text-right font-mono text-[11px] text-muted">
+                      <td className="px-3 py-4 text-right font-mono text-[11px] text-paper/60">
                         {row.hintsUsed}
                       </td>
-                      <td className="px-5 py-4 text-right font-mono text-[11px] text-muted">
+                      <td className="px-5 py-4 text-right font-mono text-[11px] text-paper/60">
                         {row.totalAttempts}
                       </td>
                     </tr>

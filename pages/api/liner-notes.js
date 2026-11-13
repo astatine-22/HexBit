@@ -21,6 +21,8 @@ export default async function handler(req, res) {
     typeof body.category === "string" && body.category.trim()
       ? body.category.trim()
       : "Coding Fundamentals";
+  const experienceLevel =
+    typeof body.experienceLevel === "string" ? body.experienceLevel.trim() : "beginner";
 
   const fallback = `Track ${title} in ${language}. The core idea is to break down the input into manageable steps before assembling the final output.`;
 
@@ -28,8 +30,14 @@ export default async function handler(req, res) {
     return res.status(200).json({ text: fallback });
   }
 
+  const analogyHint =
+    experienceLevel === "advanced"
+      ? "Focus on algorithmic trade-offs: pointers, cache locality, amortized time, and memory allocation."
+      : "Use intuitive real-world analogies (e.g. turntable speeds, mixing boards, sorting records).";
+
   const systemPrompt =
-    "You are a retro vinyl record producer and senior engineer providing 'Liner Notes' for a coding challenge. In 2 to 3 concise, spoken-friendly sentences, explain the conceptual intuition and real-world mental model behind the problem. Do NOT write code. Keep it engaging, punchy, and suitable for being read aloud.";
+    "You are a retro vinyl record producer and senior engineer providing 'Liner Notes' for a coding challenge. In 2 to 3 concise, spoken-friendly sentences, explain the conceptual intuition and real-world mental model behind the problem. Do NOT write code. Keep it engaging, punchy, and suitable for being read aloud. " +
+    analogyHint;
 
   const userPrompt = `Challenge: "${title}"\nLanguage: ${language}\nCategory: ${category}\nDescription: ${description || "No description provided."}\n\nWrite the Liner Notes now.`;
 

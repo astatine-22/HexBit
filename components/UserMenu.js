@@ -102,6 +102,14 @@ export default function UserMenu({ tone = "dark" }) {
           </div>
 
           <Link
+            href="/matcher"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block px-3.5 py-2.5 text-[12px] text-accent transition-colors hover:bg-white/[0.03]"
+          >
+            The Audition (Job Matcher)
+          </Link>
+          <Link
             href="/progress"
             role="menuitem"
             onClick={() => setOpen(false)}

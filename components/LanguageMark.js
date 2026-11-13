@@ -14,7 +14,7 @@ export default function LanguageMark({
         className={`grid h-7 w-7 shrink-0 place-items-center rounded-[4px] border font-mono text-[10px] font-semibold leading-none ${
           tone === "dark"
             ? "border-paper/25 bg-paper/5 text-paper/90"
-            : "border-line bg-white/50 text-ink/80"
+            : "border-paper/10 bg-ink-2 text-paper/80"
         }`}
         title={meta.label}
       >

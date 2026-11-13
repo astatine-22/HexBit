@@ -7,8 +7,8 @@ import { useAuth } from "@/components/AuthProvider";
 function LoadingCard({ label }) {
   return (
     <div className="flex min-h-[320px] items-center justify-center px-6 py-16">
-      <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-2">
-        <span className="h-3.5 w-3.5 animate-spin rounded-full border border-line border-t-ink" />
+      <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-paper/40">
+        <span className="h-3.5 w-3.5 animate-spin rounded-full border border-paper/10 border-t-paper" />
         {label}
       </div>
     </div>
@@ -26,7 +26,7 @@ export default function RequireAuth({ children, label = "Checking your sessionâ€
 
   useEffect(() => {
     if (!loading && !user) {
-      const next = pathname ? `?next=${encodeURIComponent(pathname)}` : "";
+      const next = pathname ? `?returnTo=${encodeURIComponent(pathname)}` : "";
       router.replace(`/login${next}`);
     }
   }, [loading, user, pathname, router]);

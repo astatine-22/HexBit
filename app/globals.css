@@ -29,6 +29,26 @@
     "Liberation Mono", monospace;
 }
 
+/* LIGHT THEME OVERRIDES (Dark mode remains default) */
+html[data-theme="light"] {
+  --color-ink: #f8f6f0;
+  --color-ink-2: #ffffff;
+  --color-ink-3: #f1ede2;
+  --color-paper: #181914;
+  --color-paper-2: #24261e;
+  --color-paper-3: #32352b;
+  --color-line: #ded8c8;
+  --color-line-dark: #ccc5b3;
+  --color-muted: #5e6052;
+  --color-muted-2: #7a7c6e;
+  --color-accent: #276947;
+}
+
+/* Smooth background/color transition when toggling */
+html {
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
@@ -36,8 +56,8 @@
   }
 
   body {
-    background-color: var(--color-paper);
-    color: var(--color-ink);
+    background-color: var(--color-ink);
+    color: var(--color-paper);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;

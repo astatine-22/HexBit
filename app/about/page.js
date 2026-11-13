@@ -68,21 +68,21 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-16">
           <div className="grid gap-12 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
             <aside className="lg:sticky lg:top-24 lg:self-start">
-              <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted-2">
+              <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-paper/40">
                 The short version
               </p>
               <p className="mt-4 font-display text-2xl leading-snug tracking-[-0.02em]">
                 Browse a shelf, read a brief, run a mock, ask for one nudge at a
                 time.
               </p>
-              <p className="mt-4 text-[13px] leading-relaxed text-muted">
+              <p className="mt-4 text-[13px] leading-relaxed text-paper/60">
                 No paid services, no network calls, no server database.
                 Accounts, sessions, and progress all live in this browser so the
                 interaction can be judged on its own terms.
               </p>
               <Link
                 href="/challenges"
-                className="group mt-6 inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-ink"
+                className="group mt-6 inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-paper"
               >
                 Back to the shelf
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -91,15 +91,15 @@ export default function AboutPage() {
 
             <div className="space-y-14">
               <section>
-                <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted-2">
+                <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-paper/40">
                   01 — The interaction
                 </p>
-                <div className="mt-4 grid gap-6 border-t border-line pt-6 sm:grid-cols-2">
+                <div className="mt-4 grid gap-6 border-t border-paper/10 pt-6 sm:grid-cols-2">
                   <div>
                     <h2 className="font-display text-2xl tracking-[-0.02em]">
                       Browse like a crate
                     </h2>
-                    <p className="mt-3 text-[14px] leading-relaxed text-muted">
+                    <p className="mt-3 text-[14px] leading-relaxed text-paper/60">
                       Unselected challenges narrow into book spines with vertical
                       titles and a difficulty stripe. The centered pressing opens
                       into a full cover, complete with a record sliding out of the
@@ -111,7 +111,7 @@ export default function AboutPage() {
                     <h2 className="font-display text-2xl tracking-[-0.02em]">
                       Work like a studio
                     </h2>
-                    <p className="mt-3 text-[14px] leading-relaxed text-muted">
+                    <p className="mt-3 text-[14px] leading-relaxed text-paper/60">
                       The detail page is deliberately read-only: read the brief,
                       inspect the starter pressing, then start the challenge. The
                       workspace splits Monaco from the console, with a collapsible
@@ -122,29 +122,29 @@ export default function AboutPage() {
               </section>
 
               <section>
-                <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted-2">
+                <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-paper/40">
                   02 — What is mocked
                 </p>
-                <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-muted">
+                <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-paper/60">
                   The seams are deliberate. Each integration is isolated in one
                   module with a TODO, so replacing a mock does not mean rewriting
                   a component.
                 </p>
-                <div className="mt-6 divide-y divide-line border-y border-line">
+                <div className="mt-6 divide-y divide-line border-y border-paper/10">
                   {MODULES.map((module) => (
                     <div
                       key={module.path}
                       className="grid gap-3 py-5 sm:grid-cols-[190px_minmax(0,1fr)] sm:gap-8"
                     >
                       <div>
-                        <p className="font-mono text-[10px] tracking-[0.04em] text-ink">
+                        <p className="font-mono text-[10px] tracking-[0.04em] text-paper">
                           {module.path}
                         </p>
-                        <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.18em] text-muted-2">
+                        <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.18em] text-paper/40">
                           {module.label} · swappable
                         </p>
                       </div>
-                      <p className="text-[13px] leading-relaxed text-muted">
+                      <p className="text-[13px] leading-relaxed text-paper/60">
                         {module.note}
                       </p>
                     </div>
@@ -153,11 +153,11 @@ export default function AboutPage() {
               </section>
 
               <section>
-                <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted-2">
+                <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-paper/40">
                   03 — The build
                 </p>
-                <div className="mt-4 grid gap-6 border-t border-line pt-6 sm:grid-cols-2">
-                  <ul className="space-y-2.5 text-[13px] text-muted">
+                <div className="mt-4 grid gap-6 border-t border-paper/10 pt-6 sm:grid-cols-2">
+                  <ul className="space-y-2.5 text-[13px] text-paper/60">
                     {[
                       "Next.js App Router with server-rendered routes",
                       "Tailwind CSS v4 with a custom theme",
@@ -174,11 +174,11 @@ export default function AboutPage() {
                       </li>
                     ))}
                   </ul>
-                  <div className="rounded-[3px] border border-line bg-paper-2 p-5">
-                    <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-2">
+                  <div className="rounded-[3px] border border-paper/10 bg-ink-2 p-5">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-paper/40">
                       Deliberately out of scope
                     </p>
-                    <p className="mt-3 text-[13px] leading-relaxed text-muted">
+                    <p className="mt-3 text-[13px] leading-relaxed text-paper/60">
                       No real execution and no live hint API. Auth is demo-grade
                       localStorage only: passwords are salted and SHA-256 hashed,
                       but clearing storage or switching browsers starts fresh.

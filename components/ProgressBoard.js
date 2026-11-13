@@ -135,21 +135,21 @@ export default function ProgressBoard({ challenges }) {
 
   return (
     <div>
-      <section className="mb-6 grid grid-cols-2 gap-px overflow-hidden rounded-[3px] border border-line bg-line sm:grid-cols-4">
+      <section className="mb-6 grid grid-cols-2 gap-px overflow-hidden rounded-[3px] border border-paper/10 bg-paper/10 sm:grid-cols-4">
         {[
           { label: "XP", value: xp, hint: "+10 per first solve" },
           { label: "Daily streak", value: `${streak}d`, hint: "consecutive solve days" },
           { label: "Hints used", value: hintsUsed, hint: "across all pressings" },
           { label: "Run attempts", value: totalAttempts, hint: "all challenges" },
         ].map((item) => (
-          <div key={item.label} className="bg-white/60 px-5 py-4">
-            <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-2">
+          <div key={item.label} className="bg-ink-2 px-5 py-4">
+            <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
               {item.label}
             </p>
             <p className="mt-2 font-display text-[clamp(1.7rem,3vw,2.2rem)] leading-none tracking-[-0.03em]">
               {loaded ? item.value : "—"}
             </p>
-            <p className="mt-1.5 font-mono text-[7px] uppercase tracking-[0.14em] text-muted-2">
+            <p className="mt-1.5 font-mono text-[7px] uppercase tracking-[0.14em] text-paper/40">
               {item.hint}
             </p>
           </div>
@@ -157,12 +157,12 @@ export default function ProgressBoard({ challenges }) {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
-        <section className="rounded-[3px] border border-line bg-white/40 p-6 lg:p-8">
+        <section className="rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">
           <div className="flex items-center justify-between gap-4">
-            <p className="font-mono text-[9px] uppercase tracking-[0.26em] text-muted-2">
+            <p className="font-mono text-[9px] uppercase tracking-[0.26em] text-paper/40">
               Overall completion
             </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-2">
+            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/40">
               {loaded ? `${progress}%` : "reading…"}
             </p>
           </div>
@@ -171,13 +171,13 @@ export default function ProgressBoard({ challenges }) {
             <span className="font-display text-[clamp(3.6rem,7vw,5.4rem)] leading-[0.8] tracking-[-0.04em]">
               {loaded ? solvedCount : "—"}
             </span>
-            <span className="pb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+            <span className="pb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-paper/60">
               / {challenges.length}
             </span>
           </div>
 
           <div
-            className="mt-6 h-1.5 overflow-hidden rounded-full bg-paper-3"
+            className="mt-6 h-1.5 overflow-hidden rounded-full bg-white/10"
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={challenges.length}
@@ -190,7 +190,7 @@ export default function ProgressBoard({ challenges }) {
             />
           </div>
 
-          <div className="mt-7 grid grid-cols-3 gap-4 border-t border-line pt-5">
+          <div className="mt-7 grid grid-cols-3 gap-4 border-t border-paper/10 pt-5">
             {["easy", "medium", "hard"].map((difficulty) => {
               const meta = getDifficulty(difficulty);
               const group = challenges.filter(
@@ -205,7 +205,7 @@ export default function ProgressBoard({ challenges }) {
 
               return (
                 <div key={difficulty}>
-                  <p className="flex items-center gap-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-muted">
+                  <p className="flex items-center gap-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-paper/60">
                     <span
                       className="h-1.5 w-1.5 rounded-full"
                       style={{ backgroundColor: meta.hex }}
@@ -215,11 +215,11 @@ export default function ProgressBoard({ challenges }) {
                   </p>
                   <p className="mt-2 font-display text-2xl leading-none">
                     {loaded ? solved : "—"}
-                    <span className="ml-1 font-mono text-[9px] text-muted-2">
+                    <span className="ml-1 font-mono text-[9px] text-paper/40">
                       / {group.length}
                     </span>
                   </p>
-                  <div className="mt-2 h-px w-full bg-line">
+                  <div className="mt-2 h-px w-full bg-paper/10">
                     <div
                       className="h-px"
                       style={{
@@ -270,15 +270,15 @@ export default function ProgressBoard({ challenges }) {
       </div>
 
       <section className="mt-10">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-white/40 px-5 py-3.5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-paper/10 bg-ink-2 px-5 py-3.5">
+          <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-paper/60">
             Language tracks · explore a level list
           </p>
           <button
             type="button"
             onClick={handleReset}
             disabled={!loaded || solvedCount === 0}
-            className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted underline-offset-4 transition-colors hover:text-ink hover:underline disabled:cursor-not-allowed disabled:opacity-35"
+            className="font-mono text-[9px] uppercase tracking-[0.16em] text-paper/60 underline-offset-4 transition-colors hover:text-paper hover:underline disabled:cursor-not-allowed disabled:opacity-35"
           >
             Reset my progress
           </button>
@@ -292,11 +292,11 @@ export default function ProgressBoard({ challenges }) {
               <Link
                 key={track.language}
                 href={`/progress/${track.language}`}
-                className="group relative flex flex-col overflow-hidden rounded-[3px] border border-line bg-white/60 p-5 transition-colors hover:bg-white"
+                className="group relative flex flex-col overflow-hidden rounded-[3px] border border-paper/10 bg-ink-2 p-5 transition-colors hover:bg-ink-3"
               >
                 <div className="flex items-start justify-between gap-3">
                   <LanguageMark language={track.language} showLabel />
-                  <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-2">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/40">
                     {track.solved} / {track.total}
                   </span>
                 </div>
@@ -305,13 +305,13 @@ export default function ProgressBoard({ challenges }) {
                   <p className="font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-none tracking-[-0.03em]">
                     {loaded ? `${track.percentage}%` : "—"}
                   </p>
-                  <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-2">
+                  <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
                     {track.solved} of {track.total} levels solved
                   </p>
                 </div>
 
                 <div
-                  className="mt-4 h-1.5 overflow-hidden rounded-full bg-paper-3"
+                  className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10"
                   role="progressbar"
                   aria-valuemin={0}
                   aria-valuemax={track.total}
@@ -334,7 +334,7 @@ export default function ProgressBoard({ challenges }) {
                     return (
                       <span
                         key={difficulty}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-muted"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-paper/10 bg-ink-3 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-paper/60"
                       >
                         <span
                           className="h-1.5 w-1.5 rounded-full"
@@ -347,7 +347,7 @@ export default function ProgressBoard({ challenges }) {
                   })}
                 </div>
 
-                <span className="mt-5 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-ink transition-transform duration-300 group-hover:translate-x-1">
+                <span className="mt-5 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-paper transition-transform duration-300 group-hover:translate-x-1">
                   Explore levels
                   <ArrowRight className="h-3.5 w-3.5" />
                 </span>

@@ -33,9 +33,17 @@ function tierFor(attemptCount) {
   return Math.min(Math.max(attemptCount, 1), 4);
 }
 
-function buildSystemPrompt(tier, language) {
+function buildSystemPrompt(tier, language, learningStyle, experienceLevel) {
+  const persona =
+    learningStyle === "direct"
+      ? "You are a direct, pragmatic pair programmer. Pinpoint the exact line number of the bug and show the 1-line syntax fix immediately."
+      : learningStyle === "strict"
+        ? "You are a demanding Staff Engineer. Critique the solution's Big-O time and space complexity, point out hidden memory allocation, and demand production-grade idioms."
+        : "You are a Socratic tutor. Only ask leading questions and point at concepts. NEVER provide code fixes or the final answer.";
+
   return [
-    `You are HexBit's coding mentor, helping a beginner with a small ${language || "programming"} challenge.`,
+    `You are HexBit's coding mentor, helping a ${experienceLevel || "beginner"} with a small ${language || "programming"} challenge.`,
+    persona,
     `The student is on attempt ${tier} of this hint ladder, so follow this style: ${TIER_RULES[tier]}`,
     "Rules:",
     "- Reply with ONLY the hint text: 1-3 short sentences of plain prose.",
@@ -118,6 +126,11 @@ function parseBody(body) {
     .slice(-MAX_HISTORY_MESSAGES)
     .map((m) => ({ role: m.role, content: m.content.slice(0, 1000) }));
 
+  const learningStyle =
+    typeof body.learningStyle === "string" ? body.learningStyle.slice(0, 40) : "";
+  const experienceLevel =
+    typeof body.experienceLevel === "string" ? body.experienceLevel.slice(0, 40) : "";
+
   return {
     challengeDescription,
     userCode: typeof body.userCode === "string" ? body.userCode.slice(0, 4000) : "",
@@ -129,6 +142,8 @@ function parseBody(body) {
     action,
     snippet,
     conversationHistory,
+    learningStyle,
+    experienceLevel,
   };
 }
 
@@ -148,7 +163,7 @@ export default async function handler(req, res) {
     });
   }
 
-  const { challengeDescription, userCode, errorMessage, attemptCount, slug, language, conversationHistory, action, snippet } = parsed;
+  const { challengeDescription, userCode, errorMessage, attemptCount, slug, language, conversationHistory, action, snippet, learningStyle, experienceLevel } = parsed;
   const tier = tierFor(attemptCount);
 
   if (action === "complete_snippet") {
@@ -204,7 +219,7 @@ export default async function handler(req, res) {
   }
 
   const messages = [
-    { role: "system", content: buildSystemPrompt(tier, language) },
+    { role: "system", content: buildSystemPrompt(tier, language, learningStyle, experienceLevel) },
     ...parsed.conversationHistory.map((m) => ({ role: m.role, content: m.content })),
     {
       role: "user",

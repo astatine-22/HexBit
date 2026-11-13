@@ -80,13 +80,26 @@ export default function OnboardingFlow() {
       ? languageQuestions.slice(0, 3)
       : quizzes.filter((q) => q.language === "python").slice(0, 3);
 
-  async function handleFinish(bonusXp = 50) {
+  async function handleFinish() {
+    let calibratedLevel = 1;
+    let bonusXp = 50;
+    if (selectedLevel === "advanced" && score === activeQuestions.length) {
+      calibratedLevel = 21;
+      bonusXp = 200;
+    } else if (score >= 2) {
+      calibratedLevel = 11;
+      bonusXp = 120;
+    }
+
     if (user?.username) {
       updateProgress(user.username, {
         favoriteLanguage: selectedLanguage,
         experienceLevel: selectedLevel,
         learningStyle: selectedStyle,
         hasCompletedOnboarding: true,
+        calibratedLevel,
+        diagnosticScore: score,
+        bonusXp,
         xp: (user?.progress?.xp || 0) + bonusXp,
       });
       reloadUser?.();
@@ -146,7 +159,7 @@ export default function OnboardingFlow() {
 
         <button
           type="button"
-          onClick={() => handleFinish(25)}
+          onClick={() => handleFinish()}
           className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper/40 transition-colors hover:text-paper/80"
         >
           Skip for now →
@@ -431,14 +444,22 @@ export default function OnboardingFlow() {
                 Bonus Starting XP
               </p>
               <p className="mt-1 font-display text-2xl text-[#7bddaa]">
-                +{score * 40 + 50} XP
+                +{selectedLevel === "advanced" && score === activeQuestions.length ? 200 : score >= 2 ? 120 : 50} XP
+              </p>
+            </div>
+            <div className="col-span-2">
+              <p className="font-mono text-[9px] uppercase tracking-widest text-paper/40">
+                Calibrated Level
+              </p>
+              <p className="mt-1 font-display text-2xl text-accent">
+                {selectedLevel === "advanced" && score === activeQuestions.length ? 21 : score >= 2 ? 11 : 1}
               </p>
             </div>
           </div>
 
           <button
             type="button"
-            onClick={() => handleFinish(score * 40 + 50)}
+            onClick={() => handleFinish()}
             className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3 font-mono text-sm font-semibold text-ink shadow-lg shadow-accent/20 transition-transform hover:scale-105"
           >
             Launch Your Personalized Track <ArrowRight className="h-4 w-4" />

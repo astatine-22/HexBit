@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cli-calculator",
+    "title": "CLI Calculator",
+    "difficulty": "beginner",
+    "language": "python",
+    "goal": "Build a command-line calculator that reads two numbers and an operator, then prints the result.",
+    "milestones": ["Setup input parsing", "Implement operations", "Handle division by zero", "Polish output"],
+    "checklist": ["Reads two numbers", "Supports + - * /", "Handles divide by zero", "Prints result"],
+    "starterCode": "a = float(input())\nb = float(input())\nop = input()\n# compute and print result\n",
+    "expectedOutput": "Result: 7.0",
+    "solution": "a = float(input())\nb = float(input())\nop = input()\nif op == '+': print('Result:', a + b)\nelif op == '-': print('Result:', a - b)\nelif op == '*': print('Result:', a * b)\nelif op == '/':\n    if b == 0: print('Cannot divide by zero')\n    else: print('Result:', a / b)"
+  },
+  {
+    "id": "expense-tracker",
+    "title": "Expense Tracker",
+    "difficulty": "intermediate",
+    "language": "javascript",
+    "goal": "Track expenses in an array, compute totals by category, and print a summary.",
+    "milestones": ["Store expenses", "Sum by category", "Print summary", "Filter by date"],
+    "checklist": ["Add expense", "List expenses", "Total by category", "Grand total"],
+    "starterCode": "const expenses = [{name:'Coffee',amount:4,cat:'Food'},{name:'Bus',amount:2,cat:'Travel'}];\n// print total\n",
+    "expectedOutput": "Food: 4\nTravel: 2\nTotal: 6",
+    "solution": "const expenses = [{name:'Coffee',amount:4,cat:'Food'},{name:'Bus',amount:2,cat:'Travel'}];\nconst byCat = {};\nexpenses.forEach(e => { byCat[e.cat] = (byCat[e.cat]||0)+e.amount; });\nObject.keys(byCat).forEach(k => console.log(k+':', byCat[k]));\nconsole.log('Total:', expenses.reduce((s,e)=>s+e.amount,0));"
+  },
+  {
+    "id": "task-manager",
+    "title": "Mini Task Manager",
+    "difficulty": "advanced",
+    "language": "typescript",
+    "goal": "Build a small task manager with add, complete, and list operations.",
+    "milestones": ["Define Task type", "Add task", "Complete task", "List tasks"],
+    "checklist": ["Add task", "Mark complete", "List all", "Filter done"],
+    "starterCode": "type Task = { id: number; title: string; done: boolean };\nconst tasks: Task[] = [];\n// implement add/complete/list\n",
+    "expectedOutput": "1. Buy milk [done]\n2. Read book [todo]",
+    "solution": "type Task = { id: number; title: string; done: boolean };\nconst tasks: Task[] = [{id:1,title:'Buy milk',done:true},{id:2,title:'Read book',done:false}];\ntasks.forEach(t => console.log(t.id+'.', t.title, t.done?'[done]':'[todo]'));"
+  }
+]

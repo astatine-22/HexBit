@@ -6,6 +6,7 @@ import DifficultyBadge from "@/components/DifficultyBadge";
 import LanguageMark from "@/components/LanguageMark";
 import { getLanguageCurriculum } from "@/lib/challenges";
 import { getSolvedChallengeIds } from "@/lib/progress";
+import { useAuth } from "@/components/AuthProvider";
 import { AUTH_EVENT, PROGRESS_EVENT } from "@/lib/auth";
 import { coverStyle, getDifficulty, getLanguage } from "@/lib/ui";
 import { Check, ChevronLeft, ChevronRight } from "@/components/icons";
@@ -14,6 +15,7 @@ const pad = (value) => String(value).padStart(2, "0");
 
 export default function ShelfView({ challenges }) {
   const router = useRouter();
+  const { user } = useAuth();
   const [viewState, setViewState] = useState({
     level: "languages",
     selectedLanguage: null,
@@ -38,6 +40,13 @@ export default function ShelfView({ challenges }) {
       window.removeEventListener("storage", sync);
     };
   }, []);
+
+  useEffect(() => {
+    if (!user?.progress?.favoriteLanguage || viewState.level !== "languages") return;
+    const fav = user.progress.favoriteLanguage;
+    const idx = languageEntries.findIndex((entry) => entry.id === fav);
+    if (idx >= 0) setActiveIndex(idx);
+  }, [user?.progress?.favoriteLanguage, viewState.level]);
 
   const curriculum = getLanguageCurriculum();
   const languageEntries = Object.keys(curriculum).map((key) => {
@@ -203,6 +212,15 @@ export default function ShelfView({ challenges }) {
                             <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/45">
                               No. {pad(index + 1)}
                             </p>
+                            {isActive && item.id === user?.progress?.favoriteLanguage ? (
+                              <p className="mt-2 inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/15 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.2em] text-accent shadow-lg shadow-accent/20">
+                                ✦ Your active A-side track · {user?.progress?.experienceLevel || "Apprentice"}
+                              </p>
+                            ) : item.id !== user?.progress?.favoriteLanguage ? (
+                              <p className="mt-2 font-mono text-[8px] uppercase tracking-[0.2em] text-paper/30">
+                                Uncalibrated · Click to explore
+                              </p>
+                            ) : null}
                             {item.solved ? (
                               <p className="mt-2 inline-flex items-center gap-1 font-mono text-[8px] uppercase tracking-[0.2em] text-accent">
                                 <Check className="h-3 w-3" />
@@ -416,6 +434,16 @@ export default function ShelfView({ challenges }) {
             >
               ← Back to Chapters
             </button>
+
+            {user?.progress?.calibratedLevel > 1 ? (
+              <div className="mb-6 rounded-[3px] border border-accent/30 bg-accent/10 px-4 py-3">
+                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-accent">
+                  ⚡ Diagnostic Calibration: Levels 1–{user.progress.calibratedLevel - 1} bypassed
+                  (+{user.progress.bonusXp || 0} XP bonus applied). Resuming at Level{" "}
+                  {user.progress.calibratedLevel}.
+                </p>
+              </div>
+            ) : null}
 
             <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/45">
               <span className="h-px w-8 bg-accent/70" aria-hidden="true" />

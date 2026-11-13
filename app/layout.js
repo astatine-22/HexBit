@@ -22,7 +22,21 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className="min-h-screen bg-paper text-ink">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('codementor_theme') || 'dark';
+                  document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-ink text-paper">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

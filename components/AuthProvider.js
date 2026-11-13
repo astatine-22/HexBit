@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { AUTH_EVENT, PROGRESS_EVENT, getCurrentUser } from "@/lib/auth";
+import { AUTH_EVENT, PROGRESS_EVENT, getCurrentUser, getSession, logout } from "@/lib/auth";
 
 const AuthContext = createContext({
   user: null,
@@ -32,6 +32,13 @@ export default function AuthProvider({ children }) {
     setUser(getCurrentUser());
     setLoading(false);
   }, []);
+
+  const reloadUser = refresh;
+
+  const handleLogout = useCallback(() => {
+    logout();
+    refresh();
+  }, [refresh]);
 
   useEffect(() => {
     refresh();
@@ -72,9 +79,19 @@ export default function AuthProvider({ children }) {
     };
   }, [refresh]);
 
+  const session = getSession();
+
   const value = useMemo(
-    () => ({ user, loading, refresh }),
-    [user, loading, refresh]
+    () => ({
+      user,
+      session,
+      isLoading: loading,
+      loading,
+      logout: handleLogout,
+      reloadUser,
+      refresh,
+    }),
+    [user, session, loading, handleLogout, reloadUser, refresh]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

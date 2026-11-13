@@ -4,16 +4,16 @@ const GITHUB_REPO = "https://github.com/astatine-22/HexBit";
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-line bg-paper text-muted-2">
+    <footer className="border-t border-paper/10 bg-ink-2 text-paper/60">
       <div className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
           <div>
-            <p className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.3em] text-muted-2">
+            <p className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.3em] text-paper/35">
               <span className="h-px w-8 bg-accent/70" aria-hidden="true" />
               Side B · the fine print
             </p>
 
-            <pre className="mt-4 max-w-md overflow-hidden rounded-[3px] border border-line bg-white px-4 py-3 font-mono text-[11px] leading-relaxed text-ink/80">
+            <pre className="mt-4 max-w-md overflow-hidden rounded-[3px] border border-paper/15 bg-ink-3/80 px-4 py-3 font-mono text-[11px] leading-relaxed text-accent/90">
               <code>
                 {`while (alive) {
   learn();
@@ -23,15 +23,15 @@ export default function SiteFooter() {
               </code>
             </pre>
 
-            <p className="mt-4 max-w-xl text-[12px] leading-relaxed text-muted">
+            <p className="mt-4 max-w-xl text-[12px] leading-relaxed text-paper/45">
               CodeMentor is a practice shelf for developers. Accounts, progress,
               and sessions are stored locally in your browser for the demo.
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-2">
-            <span className="text-muted">Built by</span>
-            <ul className="space-y-1.5 text-[10px] normal-case tracking-normal text-ink">
+          <div className="flex flex-col gap-3 font-mono text-[9px] uppercase tracking-[0.18em] text-paper/40">
+            <span className="text-paper/25">Built by</span>
+            <ul className="space-y-1.5 text-[10px] normal-case tracking-normal text-paper hover:text-accent transition-colors">
               <li>Sanat Naik</li>
               <li>Akshay Surya</li>
               <li>Ashevk Deuskar</li>
@@ -40,7 +40,7 @@ export default function SiteFooter() {
               href={GITHUB_REPO}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 inline-flex w-fit items-center gap-2 rounded-full border border-line px-4 py-2 text-[9px] uppercase tracking-[0.16em] text-muted transition-colors hover:border-ink/40 hover:text-ink"
+              className="mt-1 inline-flex w-fit items-center gap-2 rounded-full border border-paper/20 px-4 py-2 text-[9px] uppercase tracking-[0.16em] text-paper/70 transition-colors hover:border-accent/50 hover:text-accent"
             >
               <svg
                 className="h-3.5 w-3.5"
@@ -55,7 +55,7 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col gap-2 border-t border-line pt-5 font-mono text-[8px] uppercase tracking-[0.18em] text-muted-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-2 border-t border-paper/10 pt-5 font-mono text-[8px] uppercase tracking-[0.18em] text-paper/25 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} CodeMentor · All rights reserved.</span>
           <span>CodeMentor™ · practice shelf</span>
         </div>
