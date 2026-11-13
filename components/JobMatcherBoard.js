@@ -7,6 +7,8 @@ import { getChallenges } from "@/lib/challenges";
 import { getSolvedChallengeIds } from "@/lib/progress";
 import { verifyJobMatch } from "@/lib/jobMatcher";
 import { isVoiceRecordingSupported, startRecording, stopRecording, cancelRecording } from "@/lib/voiceRecorder";
+import HarmonicRoadmap from "@/components/HarmonicRoadmap";
+import MarketplaceDrawer from "@/components/MarketplaceDrawer";
 
 const PRESETS = [
   {
@@ -58,6 +60,24 @@ export default function JobMatcherBoard() {
   const [solvedIds, setSolvedIds] = useState(new Set());
   const [customSkillInput, setCustomSkillInput] = useState("");
 
+  // Marketplace & Harmonic Roadmap State
+  const [unlockedPacks, setUnlockedPacks] = useState([]);
+  const [userXp, setUserXp] = useState(170);
+  const [marketplaceOpen, setMarketplaceOpen] = useState(false);
+  const [marketplaceTarget, setMarketplaceTarget] = useState(null);
+  const [activeDrill, setActiveDrill] = useState(null);
+
+  // Sync user progress (XP & unlocked packs) from Auth
+  useEffect(() => {
+    if (user?.progress) {
+      if (Array.isArray(user.progress.unlockedPacks)) {
+        setUnlockedPacks(user.progress.unlockedPacks);
+      }
+      const xp = user.progress.leaderboardStats?.xp ?? user.progress.xp ?? 170;
+      setUserXp(xp);
+    }
+  }, [user]);
+
   // Interview Simulation State
   const [interviewOpen, setInterviewOpen] = useState(false);
   const [interviewQuestion, setInterviewQuestion] = useState("");
@@ -87,8 +107,8 @@ export default function JobMatcherBoard() {
   // Compute verified match results in real-time
   const matchResult = useMemo(() => {
     if (!parsedJob) return null;
-    return verifyJobMatch(parsedJob, allChallenges, solvedIds);
-  }, [parsedJob, allChallenges, solvedIds]);
+    return verifyJobMatch(parsedJob, allChallenges, solvedIds, unlockedPacks);
+  }, [parsedJob, allChallenges, solvedIds, unlockedPacks]);
 
   async function handleAnalyze(presetKey = null) {
     const textToSend = presetKey || jobText;
@@ -305,6 +325,17 @@ export default function JobMatcherBoard() {
                 {preset.label}
               </button>
             ))}
+
+            <button
+              type="button"
+              onClick={() => {
+                setMarketplaceTarget(null);
+                setMarketplaceOpen(true);
+              }}
+              className="rounded-full border border-accent/40 bg-accent/10 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-accent transition-all hover:bg-accent hover:text-ink"
+            >
+              📦 Plugin Rack ({unlockedPacks.length} Active)
+            </button>
           </div>
         </div>
       </section>
@@ -447,9 +478,39 @@ export default function JobMatcherBoard() {
                   <span>▶</span>
                   Jump to Gap Playlist ({matchResult.playlistChallenges.length} tracks)
                 </a>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMarketplaceTarget(null);
+                    setMarketplaceOpen(true);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full border border-paper/20 bg-paper/5 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-paper/70 hover:border-accent hover:text-accent"
+                >
+                  <span>📦</span>
+                  The Plugin Rack ({matchResult.marketplaceGaps?.length || 0} gaps detected)
+                </button>
               </div>
             </div>
           </section>
+
+          {/* Harmonic Frequency Roadmap (Acoustic Soundwave Ribbon) */}
+          <HarmonicRoadmap
+            skills={[
+              ...matchResult.evaluatedRequired,
+              ...matchResult.evaluatedNice,
+            ]}
+            unlockedPacks={unlockedPacks}
+            onOpenMarketplace={(target) => {
+              setMarketplaceTarget(target);
+              setMarketplaceOpen(true);
+            }}
+            onSelectChallenge={(challenge) => {
+              if (challenge?.id) {
+                window.location.href = `/challenges/${challenge.id}/solve`;
+              }
+            }}
+          />
 
           {/* Interactive Skills Matrix */}
           <section className="grid gap-6 lg:grid-cols-2">
@@ -484,21 +545,43 @@ export default function JobMatcherBoard() {
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-[10px] text-accent" title="In Progress">
                           ⚡
                         </span>
+                      ) : skill.status === "marketplace_gap" ? (
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ff5c77]/15 text-[10px] text-[#ff5c77] animate-pulse" title="In Plugin Rack">
+                          📦
+                        </span>
                       ) : (
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ee917c]/15 text-[10px] text-[#ee917c]" title="Missing Gap">
                           ✕
                         </span>
                       )}
                       <div>
-                        <span className="text-[13px] font-medium text-paper">
-                          {skill.name}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[13px] font-medium text-paper">
+                            {skill.name}
+                          </span>
+                          {skill.status === "marketplace_gap" && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMarketplaceTarget(skill.marketplacePack || skill.name);
+                                setMarketplaceOpen(true);
+                              }}
+                              className="rounded border border-[#ff5c77]/40 bg-[#ff5c77]/10 px-1.5 py-0.2 font-mono text-[8px] uppercase tracking-wider text-[#ff5c77] hover:bg-[#ff5c77] hover:text-ink transition-colors"
+                            >
+                              + Install from Rack
+                            </button>
+                          )}
+                        </div>
                         <div className="font-mono text-[8px] text-paper/40 uppercase tracking-wider">
                           {skill.status === "mastered"
-                            ? `✓ ${skill.solvedCount} Verified Pressings Solved`
+                            ? skill.isPackUnlocked
+                              ? `✓ Plugin Pack Installed in Studio Rack`
+                              : `✓ ${skill.solvedCount} Verified Pressings Solved`
                             : skill.status === "learning"
                               ? `⚡ ${skill.solvedCount} Solved · Needs ${3 - skill.solvedCount} more for mastery`
-                              : `Unattempted in your library`}
+                              : skill.status === "marketplace_gap"
+                                ? `Available as add-on pack in The Plugin Rack`
+                                : `Unattempted in your library`}
                         </div>
                       </div>
                     </div>
@@ -565,21 +648,43 @@ export default function JobMatcherBoard() {
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-[10px] text-accent">
                           ⚡
                         </span>
+                      ) : skill.status === "marketplace_gap" ? (
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ff5c77]/15 text-[10px] text-[#ff5c77] animate-pulse">
+                          📦
+                        </span>
                       ) : (
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-paper/10 text-[10px] text-paper/40">
                           ○
                         </span>
                       )}
                       <div>
-                        <span className="text-[13px] font-medium text-paper">
-                          {skill.name}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[13px] font-medium text-paper">
+                            {skill.name}
+                          </span>
+                          {skill.status === "marketplace_gap" && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMarketplaceTarget(skill.marketplacePack || skill.name);
+                                setMarketplaceOpen(true);
+                              }}
+                              className="rounded border border-[#ff5c77]/40 bg-[#ff5c77]/10 px-1.5 py-0.2 font-mono text-[8px] uppercase tracking-wider text-[#ff5c77] hover:bg-[#ff5c77] hover:text-ink transition-colors"
+                            >
+                              + Install from Rack
+                            </button>
+                          )}
+                        </div>
                         <div className="font-mono text-[8px] text-paper/40 uppercase tracking-wider">
                           {skill.status === "mastered"
-                            ? `✓ ${skill.solvedCount} Verified Solved`
+                            ? skill.isPackUnlocked
+                              ? `✓ Plugin Pack Installed in Studio Rack`
+                              : `✓ ${skill.solvedCount} Verified Solved`
                             : skill.status === "learning"
                               ? `⚡ ${skill.solvedCount} Solved`
-                              : `Optional bonus skill`}
+                              : skill.status === "marketplace_gap"
+                                ? `Available as add-on pack in The Plugin Rack`
+                                : `Optional bonus skill`}
                         </div>
                       </div>
                     </div>
@@ -651,7 +756,7 @@ export default function JobMatcherBoard() {
                   <div>
                     <div className="flex items-center justify-between gap-2">
                       <span className="rounded-[3px] border border-paper/15 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-wider text-accent">
-                        Track {idx + 1}
+                        {challenge.isMarketplaceTask ? "📦 Studio Plugin" : `Track ${idx + 1}`}
                       </span>
                       <span className="font-mono text-[8px] uppercase tracking-wider text-paper/40">
                         {challenge.estimatedMinutes || 10}m
@@ -680,12 +785,22 @@ export default function JobMatcherBoard() {
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-paper/10">
-                    <Link
-                      href={`/challenges/${challenge.id}/solve`}
-                      className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-paper/10 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-paper transition-all group-hover:bg-accent group-hover:text-ink"
-                    >
-                      Solve Now →
-                    </Link>
+                    {challenge.isMarketplaceTask ? (
+                      <button
+                        type="button"
+                        onClick={() => setActiveDrill(challenge)}
+                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-accent/20 border border-accent/40 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent transition-all hover:bg-accent hover:text-ink"
+                      >
+                        Launch Studio Drill →
+                      </button>
+                    ) : (
+                      <Link
+                        href={`/challenges/${challenge.id}/solve`}
+                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-paper/10 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-paper transition-all group-hover:bg-accent group-hover:text-ink"
+                      >
+                        Solve Now →
+                      </Link>
+                    )}
                   </div>
                 </div>
               ))}
@@ -806,6 +921,70 @@ export default function JobMatcherBoard() {
           </div>
         </div>
       ) : null}
+
+      {/* The Plugin Rack (Marketplace Drawer) */}
+      <MarketplaceDrawer
+        isOpen={marketplaceOpen}
+        onClose={() => setMarketplaceOpen(false)}
+        targetSkill={marketplaceTarget}
+        unlockedPacks={unlockedPacks}
+        userProgress={{ ...user?.progress, xp: userXp, unlockedPacks }}
+        userRank={user?.progress?.experienceLevel || "intermediate"}
+        onPackUnlocked={(packId, remainingXp, pack) => {
+          setUnlockedPacks((prev) => [...new Set([...prev, packId])]);
+          setUserXp(remainingXp);
+        }}
+      />
+
+      {/* Active Studio Drill Modal */}
+      {activeDrill && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg rounded-[6px] border border-paper/20 bg-ink-2 p-6 shadow-2xl">
+            <button
+              type="button"
+              onClick={() => setActiveDrill(null)}
+              className="absolute right-4 top-4 text-paper/40 hover:text-paper text-[18px]"
+            >
+              ✕
+            </button>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[8px] uppercase tracking-[0.24em] text-accent">
+                The Plugin Rack · Drill
+              </span>
+              <span className="text-paper/30">·</span>
+              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/50">
+                {activeDrill.packName || "Infrastructure Drill"}
+              </span>
+            </div>
+            <h3 className="mt-1 font-display text-[20px] text-paper">
+              {activeDrill.title}
+            </h3>
+            <p className="mt-2 text-[12px] leading-relaxed text-paper/70">
+              {activeDrill.description}
+            </p>
+            <div className="mt-4 rounded-[3px] border border-paper/15 bg-ink p-3 font-mono text-[11px] text-paper/80">
+              <p className="text-accent text-[9px] uppercase tracking-wider mb-1">// Interactive Terminal Scenario</p>
+              <code>$ docker compose -f compose.prod.yml up --build -d</code>
+            </div>
+            <div className="mt-5 flex items-center justify-between border-t border-paper/10 pt-4">
+              <span className="font-mono text-[10px] text-accent font-semibold">
+                +{activeDrill.xp || 20} Studio XP
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setUserXp((prev) => prev + (activeDrill.xp || 20));
+                  alert(`Drill "${activeDrill.title}" verified! +${activeDrill.xp || 20} XP added to your studio balance.`);
+                  setActiveDrill(null);
+                }}
+                className="rounded-full bg-accent px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-wider text-ink hover:opacity-90 transition-opacity"
+              >
+                Mark Drill Completed ✓
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

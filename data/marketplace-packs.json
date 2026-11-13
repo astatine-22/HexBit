@@ -1,0 +1,130 @@
+[
+  {
+    "id": "pack-docker-k8s",
+    "skillName": "Docker & Containerization",
+    "category": "DevOps & Infrastructure",
+    "description": "Dockerfile optimization, multi-stage builds, container networking, and Kubernetes pod orchestration.",
+    "prerequisiteRank": "intermediate",
+    "prerequisiteXp": 120,
+    "xpCost": 40,
+    "estimatedHours": 3,
+    "matchedKeywords": ["docker", "container", "kubernetes", "k8s", "devops", "containerization"],
+    "tasks": [
+      {
+        "id": "docker-001",
+        "title": "Multi-stage Python Alpine Container Build",
+        "difficulty": "medium",
+        "estimatedMinutes": 25,
+        "type": "drill",
+        "description": "Optimize a Python backend image by separating compile-time dependencies into a builder stage, trimming final image size by 70%.",
+        "xp": 15
+      },
+      {
+        "id": "docker-002",
+        "title": "Docker Compose Postgres & Redis Network Bridge",
+        "difficulty": "medium",
+        "estimatedMinutes": 35,
+        "type": "challenge",
+        "description": "Orchestrate a local multi-container development environment with isolated networks and healthcheck-dependent startup.",
+        "xp": 25
+      }
+    ]
+  },
+  {
+    "id": "pack-redis-caching",
+    "skillName": "Redis & Caching",
+    "category": "Distributed Systems",
+    "description": "Cache-aside patterns, TTL expiration, write-through strategies, and distributed locking.",
+    "prerequisiteRank": "intermediate",
+    "prerequisiteXp": 150,
+    "xpCost": 45,
+    "estimatedHours": 2.5,
+    "matchedKeywords": ["redis", "caching", "cache", "memcached", "key-value"],
+    "tasks": [
+      {
+        "id": "redis-001",
+        "title": "Idempotent Redis Token Bucket Rate Limiter",
+        "difficulty": "medium",
+        "estimatedMinutes": 30,
+        "type": "drill",
+        "description": "Implement a sliding-window rate limiter using Redis atomic transactions and Lua scripts to prevent API abuse.",
+        "xp": 20
+      },
+      {
+        "id": "redis-002",
+        "title": "Cache-Aside with Redlock Distributed Mutex",
+        "difficulty": "hard",
+        "estimatedMinutes": 40,
+        "type": "challenge",
+        "description": "Prevent thundering herd cache stampedes on database misses by acquiring a safe TTL-based distributed lock.",
+        "xp": 25
+      }
+    ]
+  },
+  {
+    "id": "pack-kafka-streaming",
+    "skillName": "Event Streaming (Kafka)",
+    "category": "Distributed Systems",
+    "description": "Publish-subscribe architecture, consumer groups, partition rebalancing, and event log replay.",
+    "prerequisiteRank": "advanced",
+    "prerequisiteXp": 200,
+    "xpCost": 60,
+    "estimatedHours": 4,
+    "matchedKeywords": ["kafka", "streaming", "event streaming", "pubsub", "message queue", "rabbitmq"],
+    "tasks": [
+      {
+        "id": "kafka-001",
+        "title": "Consumer Group Lag Monitor & At-Least-Once Delivery",
+        "difficulty": "hard",
+        "estimatedMinutes": 45,
+        "type": "project",
+        "description": "Design an event consumer that tracks commit offsets and dead-letter queues to prevent data loss during network partitions.",
+        "xp": 30
+      }
+    ]
+  },
+  {
+    "id": "pack-graphql-federation",
+    "skillName": "GraphQL & Subgraphs",
+    "category": "API Architecture",
+    "description": "Schema stitching, Apollo Federation, query complexity limiting, and dataloader N+1 prevention.",
+    "prerequisiteRank": "beginner",
+    "prerequisiteXp": 80,
+    "xpCost": 30,
+    "estimatedHours": 2,
+    "matchedKeywords": ["graphql", "apollo", "federation", "subgraph", "schema"],
+    "tasks": [
+      {
+        "id": "graphql-001",
+        "title": "Dataloader Batch Resolution & N+1 Query Elimination",
+        "difficulty": "medium",
+        "estimatedMinutes": 25,
+        "type": "drill",
+        "description": "Batch cross-service database lookups per execution tick using a memoized dataloader pattern.",
+        "xp": 15
+      }
+    ]
+  },
+  {
+    "id": "pack-cloud-aws",
+    "skillName": "AWS & Cloud Infrastructure",
+    "category": "Cloud Architecture",
+    "description": "S3 object storage, IAM least-privilege policies, Lambda serverless triggers, and CloudFront caching.",
+    "prerequisiteRank": "intermediate",
+    "prerequisiteXp": 140,
+    "xpCost": 40,
+    "estimatedHours": 3,
+    "matchedKeywords": ["aws", "cloud", "s3", "lambda", "cloud infrastructure", "gcp", "azure"],
+    "tasks": [
+      {
+        "id": "aws-001",
+        "title": "Presigned S3 Direct Upload Pipeline with IAM Role Delegation",
+        "difficulty": "medium",
+        "estimatedMinutes": 30,
+        "type": "drill",
+        "description": "Generate short-lived cryptographic presigned URLs for client uploads without routing payloads through the web server.",
+        "xp": 20
+      }
+    ]
+  }
+]
