@@ -14,7 +14,6 @@ import {
   getActiveProgress,
   getSolvedChallengeIds,
 } from "@/lib/progress";
-import SplitFlapDisplay from "@/components/ui/split-flap-display";
 import OrbitCardStack from "@/components/ui/orbit-card-stack";
 import GithubCalendar from "@/components/ui/github-calendar";
 import ScrollBasedVelocity from "@/components/ui/scroll-based-velocity";
@@ -228,68 +227,27 @@ export default function ProgressBoard({ challenges }) {
 
   return (
     <div>
-      {/* 1. Solari Split-Flap Analog Telemetry Board */}
-      <section className="mb-8 rounded-[3px] border border-paper/10 bg-black/40 p-5">
-        <div className="flex items-center justify-between mb-4 border-b border-paper/10 pb-2.5">
-          <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-accent font-semibold flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
-            Solari Telemetry Readout · Station 02
-          </span>
-          <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30 hidden sm:inline">
-            Live Account Progress Telemetry
-          </span>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="flex flex-col gap-1.5">
-            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
-              XP Balance
-            </span>
-            <SplitFlapDisplay
-              text={`${String(xp).padStart(5, "0")} XP`}
-              columns={8}
-              size="sm"
-              accentColor="#d9f65a"
-            />
+      {/* 1. Account Telemetry Cards */}
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { label: "XP Balance", value: `${xp} XP` },
+          { label: "Daily Streak", value: `${streak} days active` },
+          { label: "Challenges Solved", value: `${solvedCount} solved` },
+          { label: "Run Attempts", value: `${totalAttempts} runs` },
+        ].map((item) => (
+          <div
+            key={item.label}
+            className="rounded-[3px] border border-paper/10 bg-ink-2 p-4"
+          >
+            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-paper/40">
+              {item.label}
+            </p>
+            <p className="mt-2 font-display text-2xl tracking-[-0.02em] text-paper">
+              {loaded ? item.value : "—"}
+            </p>
           </div>
-
-          <div className="flex flex-col gap-1.5">
-            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
-              Daily Streak
-            </span>
-            <SplitFlapDisplay
-              text={`${String(streak).padStart(2, "0")} DAYS`}
-              columns={7}
-              size="sm"
-              accentColor="#d9f65a"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
-              Challenges Solved
-            </span>
-            <SplitFlapDisplay
-              text={`${String(solvedCount).padStart(2, "0")} SOLVED`}
-              columns={9}
-              size="sm"
-              accentColor="#d9f65a"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
-              Run Attempts
-            </span>
-            <SplitFlapDisplay
-              text={`${String(totalAttempts).padStart(3, "0")} RUNS`}
-              columns={8}
-              size="sm"
-              accentColor="#d9f65a"
-            />
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
         <section className="rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">

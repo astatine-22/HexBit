@@ -8,7 +8,6 @@ import { ArrowRight, Check, Sparkle } from "@/components/icons";
 import { getLanguage } from "@/lib/ui";
 import { getSolvedChallengeIds } from "@/lib/progress";
 import { getChallenges } from "@/lib/challenges";
-import SplitFlapDisplay from "@/components/ui/split-flap-display";
 import KineticTextReveal from "@/components/ui/kinetic-text-reveal";
 import ScrollBasedVelocity from "@/components/ui/scroll-based-velocity";
 import GithubCalendar from "@/components/ui/github-calendar";
@@ -147,64 +146,13 @@ export default function DashboardBoard() {
             <h1 className="mt-3 font-display text-[clamp(2rem,4vw,3rem)] leading-[1] tracking-[-0.03em]">
               {greeting}, <span className="italic text-accent">{displayName}</span>.
             </h1>
+            <p className="mt-2 text-[13px] text-paper/50">
+              {streak} day streak · {xp} XP · {solvedCount} solved
+            </p>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
             <span className="h-2 w-2 rounded-full bg-accent" />
             {streak} days
-          </div>
-        </div>
-
-        {/* Analog Hardware Solari Split-Flap Telemetry */}
-        <div className="mt-6 rounded-[3px] border border-paper/10 bg-black/40 p-4">
-          <div className="flex items-center justify-between mb-3 border-b border-paper/10 pb-2">
-            <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-accent font-semibold flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
-              Analog Hardware Telemetry · Station 01
-            </span>
-            <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30 hidden sm:inline">
-              Mechanical Solari Readout
-            </span>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {/* XP Odometer */}
-            <div className="flex flex-col gap-1.5">
-              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
-                XP Odometer
-              </span>
-              <SplitFlapDisplay
-                text={`${String(xp).padStart(5, "0")} XP`}
-                columns={8}
-                size="sm"
-                accentColor="#d9f65a"
-              />
-            </div>
-
-            {/* Daily Streak */}
-            <div className="flex flex-col gap-1.5">
-              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
-                Daily Streak
-              </span>
-              <SplitFlapDisplay
-                text={`${String(streak).padStart(2, "0")} DAYS ACTIVE`}
-                columns={14}
-                size="sm"
-                accentColor="#d9f65a"
-              />
-            </div>
-
-            {/* Calibrated Track */}
-            <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
-              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
-                Calibrated Track
-              </span>
-              <SplitFlapDisplay
-                text={`NOW TRACKING: ${(user?.progress?.favoriteLanguage || "PYTHON").toUpperCase()} · LEVEL ${String(solvedCount + 1).padStart(2, "0")}`}
-                columns={32}
-                size="sm"
-                accentColor="#d9f65a"
-              />
-            </div>
           </div>
         </div>
 
