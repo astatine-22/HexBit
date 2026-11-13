@@ -1,0 +1,8 @@
+{
+  "reverse-string": {
+    "expectedOutput": "olleh"
+  },
+  "fizzbuzz": {
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz"
+  }
+}
