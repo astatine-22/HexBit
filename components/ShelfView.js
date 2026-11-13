@@ -100,6 +100,10 @@ export default function ShelfView({ challenges }) {
     onClick: () => openChapter(chapter.id),
   }));
 
+  const chapterHalf = Math.ceil(chapterOrbitCards.length / 2);
+  const sideAChapterCards = chapterOrbitCards.slice(0, chapterHalf);
+  const sideBChapterCards = chapterOrbitCards.slice(chapterHalf);
+
   const challengeOrbitCards = chapterChallenges.map((challenge, index) => {
     const solved = solvedIds.includes(challenge.id);
     const diffMeta = getDifficulty(challenge.difficulty);
@@ -121,6 +125,10 @@ export default function ShelfView({ challenges }) {
       solved,
     };
   });
+
+  const challengeHalf = Math.ceil(challengeOrbitCards.length / 2);
+  const sideAChallengeCards = challengeOrbitCards.slice(0, challengeHalf);
+  const sideBChallengeCards = challengeOrbitCards.slice(challengeHalf);
 
   const currentItems =
     viewState.level === "languages"
@@ -442,12 +450,44 @@ export default function ShelfView({ challenges }) {
             </div>
 
             {chapterViewMode === "orbit" ? (
-              <div className="my-6">
-                <OrbitCardStack
-                  items={chapterOrbitCards}
-                  defaultActiveIndex={Math.floor(chapterOrbitCards.length / 2)}
-                  spread={150}
-                />
+              <div className="my-8 space-y-12">
+                {/* Side A Grooves */}
+                <div>
+                  <div className="mb-2 flex items-center justify-between border-b border-paper/10 pb-2">
+                    <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-accent font-semibold flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                      Side A · Grooves 01 – {pad(sideAChapterCards.length)} ({selectedLanguage?.name} Foundations)
+                    </span>
+                    <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30">
+                      {sideAChapterCards.length} Grooves Stack
+                    </span>
+                  </div>
+                  <OrbitCardStack
+                    items={sideAChapterCards}
+                    defaultActiveIndex={Math.floor(sideAChapterCards.length / 2)}
+                    spread={150}
+                  />
+                </div>
+
+                {/* Side B Grooves */}
+                {sideBChapterCards.length > 0 && (
+                  <div>
+                    <div className="mb-2 flex items-center justify-between border-b border-paper/10 pb-2">
+                      <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#78dcca] font-semibold flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#78dcca]" />
+                        Side B · Grooves {pad(sideAChapterCards.length + 1)} – {pad(chapterOrbitCards.length)} ({selectedLanguage?.name} Advanced)
+                      </span>
+                      <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30">
+                        {sideBChapterCards.length} Grooves Stack
+                      </span>
+                    </div>
+                    <OrbitCardStack
+                      items={sideBChapterCards}
+                      defaultActiveIndex={Math.floor(sideBChapterCards.length / 2)}
+                      spread={150}
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               <div className="cd-panel mx-auto mt-6 flex max-w-2xl flex-col gap-2">
@@ -572,13 +612,51 @@ export default function ShelfView({ challenges }) {
             </div>
 
             {challengeViewMode === "orbit" ? (
-              <div className="my-6">
-                <OrbitCardStack
-                  items={challengeOrbitCards}
-                  defaultActiveIndex={Math.min(2, Math.max(0, Math.floor(challengeOrbitCards.length / 2)))}
-                  spread={145}
-                />
-              </div>
+              challengeOrbitCards.length > 5 ? (
+                <div className="my-8 space-y-12">
+                  <div>
+                    <div className="mb-2 flex items-center justify-between border-b border-paper/10 pb-2">
+                      <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-accent font-semibold flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                        Part I · Tracks 01 – {pad(sideAChallengeCards.length)}
+                      </span>
+                      <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30">
+                        {sideAChallengeCards.length} Pressings
+                      </span>
+                    </div>
+                    <OrbitCardStack
+                      items={sideAChallengeCards}
+                      defaultActiveIndex={Math.min(2, Math.floor(sideAChallengeCards.length / 2))}
+                      spread={145}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 flex items-center justify-between border-b border-paper/10 pb-2">
+                      <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#78dcca] font-semibold flex items-center gap-1.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#78dcca]" />
+                        Part II · Tracks {pad(sideAChallengeCards.length + 1)} – {pad(challengeOrbitCards.length)}
+                      </span>
+                      <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30">
+                        {sideBChallengeCards.length} Pressings
+                      </span>
+                    </div>
+                    <OrbitCardStack
+                      items={sideBChallengeCards}
+                      defaultActiveIndex={Math.min(2, Math.floor(sideBChallengeCards.length / 2))}
+                      spread={145}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="my-6">
+                  <OrbitCardStack
+                    items={challengeOrbitCards}
+                    defaultActiveIndex={Math.min(2, Math.max(0, Math.floor(challengeOrbitCards.length / 2)))}
+                    spread={145}
+                  />
+                </div>
+              )
             ) : (
               <div className="mt-6 flex flex-col gap-2 cd-panel">
                 {chapterChallenges.map((challenge, index) => {
