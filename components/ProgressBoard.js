@@ -164,6 +164,9 @@ export default function ProgressBoard({ challenges }) {
     };
   });
 
+  const topTrackCards = trackOrbitCards.slice(0, 5);
+  const bottomTrackCards = trackOrbitCards.slice(5, 10);
+
   const saptakSkills = [
     {
       name: "Syntax & Variables",
@@ -506,14 +509,44 @@ export default function ProgressBoard({ challenges }) {
           </div>
         </div>
 
-        {/* Orbit Stack View */}
+        {/* Orbit Stack View: 5 Up and 5 Down */}
         {trackViewMode === "orbit" ? (
-          <div className="my-4">
-            <OrbitCardStack
-              items={trackOrbitCards}
-              defaultActiveIndex={Math.floor(trackOrbitCards.length / 2)}
-              spread={140}
-            />
+          <div className="my-6 space-y-12">
+            {/* Top Deck: 5 Up */}
+            <div>
+              <div className="mb-2 flex items-center justify-between border-b border-paper/10 pb-2">
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-accent font-semibold flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                  Upper Rack · Tracks 01 – 05
+                </span>
+                <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30">
+                  5 Pressings Stack
+                </span>
+              </div>
+              <OrbitCardStack
+                items={topTrackCards}
+                defaultActiveIndex={2}
+                spread={150}
+              />
+            </div>
+
+            {/* Bottom Deck: 5 Down */}
+            <div>
+              <div className="mb-2 flex items-center justify-between border-b border-paper/10 pb-2">
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#78dcca] font-semibold flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#78dcca]" />
+                  Lower Rack · Tracks 06 – 10
+                </span>
+                <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30">
+                  5 Pressings Stack
+                </span>
+              </div>
+              <OrbitCardStack
+                items={bottomTrackCards}
+                defaultActiveIndex={2}
+                spread={150}
+              />
+            </div>
           </div>
         ) : (
           /* Grid View */
