@@ -73,7 +73,7 @@ export function OrbitCardStack({
   return (
     <div
       className={cn(
-        "relative flex min-h-[460px] w-full items-center justify-center overflow-hidden py-8 px-4 select-none",
+        "isolate relative flex min-h-[460px] w-full items-center justify-center overflow-hidden py-8 px-4 select-none",
         className,
       )}
     >
@@ -91,7 +91,7 @@ export function OrbitCardStack({
           const accentColor = item.accent || "#d9f65a";
 
           const style = {
-            zIndex: active ? 80 : 50 - Math.abs(index - activeIndex),
+            zIndex: active ? 20 : 10 - Math.abs(index - activeIndex),
             transform: `translate(calc(-50% + ${position.x}px), calc(-50% + ${
               position.y - (open && active ? lift : 0)
             }px)) rotate(${position.rotation}deg) scale(${open ? 0.985 : 0.96})`,
@@ -174,17 +174,34 @@ export function OrbitCardStack({
 
               {/* Card Body */}
               <div className="pt-4">
-                <h3 className="font-display text-[18px] font-semibold leading-tight text-paper group-hover:text-accent transition-colors line-clamp-1">
-                  {item.title || item.name}
-                </h3>
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="font-display text-[18px] font-semibold leading-tight text-paper group-hover:text-accent transition-colors line-clamp-1">
+                    {item.title || item.name}
+                  </h3>
+                  {item.percentage !== undefined && (
+                    <span className="font-mono text-[10px] font-bold text-accent">
+                      {item.percentage}%
+                    </span>
+                  )}
+                </div>
+
                 <p className="mt-2 text-[12px] leading-relaxed text-paper/60 line-clamp-2">
                   {item.description}
                 </p>
 
+                {item.percentage !== undefined && (
+                  <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
+                    <div
+                      className="h-full rounded-full bg-accent transition-[width] duration-500"
+                      style={{ width: `${item.percentage}%` }}
+                    />
+                  </div>
+                )}
+
                 {/* Footer Action */}
                 <div className="mt-4 flex items-center justify-between border-t border-paper/10 pt-3">
                   <span className="font-mono text-[9px] uppercase tracking-wider text-accent font-semibold">
-                    {item.solved ? "✓ Mastered" : "Ready to Solve"}
+                    {item.statusLabel || (item.solved ? "✓ Mastered" : "Ready to Solve")}
                   </span>
 
                   {item.href ? (
@@ -192,7 +209,7 @@ export function OrbitCardStack({
                       href={item.href}
                       className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-wider text-paper hover:text-accent transition-colors"
                     >
-                      <span>Audition</span>
+                      <span>{item.actionLabel || "Audition"}</span>
                       <ArrowRight className="h-3 w-3" />
                     </Link>
                   ) : (

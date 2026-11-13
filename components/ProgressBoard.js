@@ -40,6 +40,7 @@ export default function ProgressBoard({ challenges }) {
   const [solvedIds, setSolvedIds] = useState(null);
   const [stats, setStats] = useState(null);
   const [suggestion, setSuggestion] = useState(null);
+  const [trackViewMode, setTrackViewMode] = useState("orbit");
 
   useEffect(() => {
     function sync() {
@@ -138,21 +139,24 @@ export default function ProgressBoard({ challenges }) {
     setStats(fresh.stats);
   }
 
-  const uncompletedChallenges = challenges.filter((c) => !solvedSet.has(c.id));
-  const candidateChallenges = uncompletedChallenges.length >= 5
-    ? uncompletedChallenges
-    : challenges;
-
-  const orbitCards = candidateChallenges.slice(0, 5).map((c, i) => ({
-    id: c.id,
-    title: c.title,
-    role: `${c.language.toUpperCase()} · ${c.category || "CORE"}`,
-    description: c.description,
-    stat: c.difficulty.toUpperCase(),
-    accent: ["#d9f65a", "#78dcca", "#b9a7ff", "#f8d66d", "#ff9d77"][i % 5],
-    href: `/challenges/${c.id}/solve`,
-    solved: solvedSet.has(c.id),
-  }));
+  const trackOrbitCards = languageTracks.map((track, i) => {
+    const meta = getLanguage(track.language);
+    return {
+      id: track.language,
+      name: meta.label,
+      title: `${meta.label} Studio Track`,
+      role: `TRACK 0${i + 1} · ${track.total} LEVELS`,
+      category: `${track.solved}/${track.total} SOLVED`,
+      description: `Complete curriculum across ${track.total} levels: Easy syntax, Medium data structures, and Hard algorithmic patterns.`,
+      stat: `${track.percentage}% COMPLETE`,
+      percentage: track.percentage,
+      statusLabel: track.solved > 0 ? `${track.solved}/${track.total} Solved` : "Ready to Start",
+      actionLabel: "Explore Levels",
+      accent: meta.cover?.accent || ["#d9f65a", "#78dcca", "#b9a7ff", "#f8d66d", "#ff9d77"][i % 5],
+      href: `/progress/${track.language}`,
+      solved: track.solved > 0,
+    };
+  });
 
   return (
     <div>
@@ -350,123 +354,147 @@ export default function ProgressBoard({ challenges }) {
         />
       </div>
 
-      {/* Orbit Card Stack - Next Pressings Queue */}
-      <section className="my-8 relative overflow-hidden rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
+      {/* 2. Language Tracks - Interactive Orbit Card Stack & Grid View */}
+      <section className="my-10 rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-paper/10 pb-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-accent font-semibold">
-                Orbit Card Stack
+                Language Tracks · Orbit Shelf
               </span>
               <span className="rounded-full bg-accent/10 px-2 py-0.5 font-mono text-[7px] uppercase tracking-wider text-accent border border-accent/20">
-                Next In Queue
+                10 Languages Active
               </span>
             </div>
             <h3 className="mt-1 font-display text-[22px] text-paper">
-              <KineticTextReveal text="Next Pressings in Your Crate" blur={true} />
+              <KineticTextReveal text="Curriculum Pressings by Language" blur={true} />
             </h3>
             <p className="font-mono text-[11px] text-paper/50">
-              Hover to fan out and orbit through upcoming challenge pressings.
+              Hover to fan out or use arrow keys (← →) to orbit through language tracks.
             </p>
           </div>
-          <span className="font-mono text-[9px] uppercase tracking-wider text-paper/30">
-            Scrub with ← → · Click to Solve
-          </span>
-        </div>
 
-        <OrbitCardStack
-          items={orbitCards}
-          defaultActiveIndex={2}
-          spread={155}
-        />
-      </section>
-
-      <section className="mt-10">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-paper/10 bg-ink-2 px-5 py-3.5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-paper/60">
-            Language tracks · explore a level list
-          </p>
-          <button
-            type="button"
-            onClick={handleReset}
-            disabled={!loaded || solvedCount === 0}
-            className="font-mono text-[9px] uppercase tracking-[0.16em] text-paper/60 underline-offset-4 transition-colors hover:text-paper hover:underline disabled:cursor-not-allowed disabled:opacity-35"
-          >
-            Reset my progress
-          </button>
-        </div>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {languageTracks.map((track) => {
-            const meta = getLanguage(track.language);
-
-            return (
-              <Link
-                key={track.language}
-                href={`/progress/${track.language}`}
-                className="group relative flex flex-col overflow-hidden rounded-[3px] border border-paper/10 bg-ink-2 p-5 transition-colors hover:bg-ink-3"
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* View Mode Switcher */}
+            <div className="flex items-center rounded-[3px] border border-paper/15 bg-ink p-0.5 font-mono text-[9px] uppercase tracking-wider">
+              <button
+                type="button"
+                onClick={() => setTrackViewMode("orbit")}
+                className={`rounded-[2px] px-2.5 py-1 transition-colors ${
+                  trackViewMode === "orbit"
+                    ? "bg-accent text-ink font-bold"
+                    : "text-paper/60 hover:text-paper"
+                }`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <LanguageMark language={track.language} showLabel />
-                  <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/40">
-                    {track.solved} / {track.total}
-                  </span>
-                </div>
+                ✦ Orbit Stack
+              </button>
+              <button
+                type="button"
+                onClick={() => setTrackViewMode("grid")}
+                className={`rounded-[2px] px-2.5 py-1 transition-colors ${
+                  trackViewMode === "grid"
+                    ? "bg-accent text-ink font-bold"
+                    : "text-paper/60 hover:text-paper"
+                }`}
+              >
+                ⊞ Grid View
+              </button>
+            </div>
 
-                <div className="mt-4">
-                  <p className="font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-none tracking-[-0.03em]">
-                    {loaded ? `${track.percentage}%` : "—"}
-                  </p>
-                  <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
-                    {track.solved} of {track.total} levels solved
-                  </p>
-                </div>
-
-                <div
-                  className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10"
-                  role="progressbar"
-                  aria-valuemin={0}
-                  aria-valuemax={track.total}
-                  aria-valuenow={loaded ? track.solved : 0}
-                  aria-label={`${meta.label} progress`}
-                >
-                  <div
-                    className="h-full rounded-full bg-ink transition-[width] duration-500"
-                    style={{
-                      width: `${loaded ? track.percentage : 0}%`,
-                    }}
-                  />
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {["easy", "medium", "hard"].map((difficulty) => {
-                    const entry = track.byDifficulty[difficulty];
-                    const metaDifficulty = getDifficulty(difficulty);
-
-                    return (
-                      <span
-                        key={difficulty}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-paper/10 bg-ink-3 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-paper/60"
-                      >
-                        <span
-                          className="h-1.5 w-1.5 rounded-full"
-                          style={{ backgroundColor: metaDifficulty.hex }}
-                          aria-hidden="true"
-                        />
-                        {entry.solved}/{entry.total}
-                      </span>
-                    );
-                  })}
-                </div>
-
-                <span className="mt-5 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-paper transition-transform duration-300 group-hover:translate-x-1">
-                  Explore levels
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </span>
-              </Link>
-            );
-          })}
+            <button
+              type="button"
+              onClick={handleReset}
+              disabled={!loaded || solvedCount === 0}
+              className="rounded-[3px] border border-paper/15 bg-ink px-3 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-paper/50 hover:text-paper hover:border-paper/30 disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              Reset Progress
+            </button>
+          </div>
         </div>
+
+        {/* Orbit Stack View */}
+        {trackViewMode === "orbit" ? (
+          <div className="my-4">
+            <OrbitCardStack
+              items={trackOrbitCards}
+              defaultActiveIndex={Math.floor(trackOrbitCards.length / 2)}
+              spread={140}
+            />
+          </div>
+        ) : (
+          /* Grid View */
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {languageTracks.map((track) => {
+              const meta = getLanguage(track.language);
+
+              return (
+                <Link
+                  key={track.language}
+                  href={`/progress/${track.language}`}
+                  className="group relative flex flex-col overflow-hidden rounded-[3px] border border-paper/10 bg-ink-2 p-5 transition-colors hover:bg-ink-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <LanguageMark language={track.language} showLabel />
+                    <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/40">
+                      {track.solved} / {track.total}
+                    </span>
+                  </div>
+
+                  <div className="mt-4">
+                    <p className="font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-none tracking-[-0.03em]">
+                      {loaded ? `${track.percentage}%` : "—"}
+                    </p>
+                    <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
+                      {track.solved} of {track.total} levels solved
+                    </p>
+                  </div>
+
+                  <div
+                    className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10"
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={track.total}
+                    aria-valuenow={loaded ? track.solved : 0}
+                    aria-label={`${meta.label} progress`}
+                  >
+                    <div
+                      className="h-full rounded-full bg-accent transition-[width] duration-500"
+                      style={{
+                        width: `${loaded ? track.percentage : 0}%`,
+                      }}
+                    />
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {["easy", "medium", "hard"].map((difficulty) => {
+                      const entry = track.byDifficulty[difficulty];
+                      const metaDifficulty = getDifficulty(difficulty);
+
+                      return (
+                        <span
+                          key={difficulty}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-paper/10 bg-ink-3 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-paper/60"
+                        >
+                          <span
+                            className="h-1.5 w-1.5 rounded-full"
+                            style={{ backgroundColor: metaDifficulty.hex }}
+                            aria-hidden="true"
+                          />
+                          {entry.solved}/{entry.total}
+                        </span>
+                      );
+                    })}
+                  </div>
+
+                  <span className="mt-5 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-paper transition-transform duration-300 group-hover:translate-x-1">
+                    Explore levels
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </section>
     </div>
   );
