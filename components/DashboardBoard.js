@@ -8,6 +8,11 @@ import { ArrowRight, Check, Sparkle } from "@/components/icons";
 import { getLanguage } from "@/lib/ui";
 import { getSolvedChallengeIds } from "@/lib/progress";
 import { getChallenges } from "@/lib/challenges";
+import SplitFlapDisplay from "@/components/ui/split-flap-display";
+import KineticTextReveal from "@/components/ui/kinetic-text-reveal";
+import ScrollBasedVelocity from "@/components/ui/scroll-based-velocity";
+import GithubCalendar from "@/components/ui/github-calendar";
+import MusicPlayer from "@/components/ui/music-player";
 
 const pad = (value) => String(value).padStart(2, "0");
 
@@ -141,13 +146,64 @@ export default function DashboardBoard() {
             <h1 className="mt-3 font-display text-[clamp(2rem,4vw,3rem)] leading-[1] tracking-[-0.03em]">
               {greeting}, <span className="italic text-accent">{displayName}</span>.
             </h1>
-            <p className="mt-2 text-[13px] text-paper/50">
-              {streak} day streak · {xp} XP · {solvedCount} solved
-            </p>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-accent">
             <span className="h-2 w-2 rounded-full bg-accent" />
             {streak} days
+          </div>
+        </div>
+
+        {/* Analog Hardware Solari Split-Flap Telemetry */}
+        <div className="mt-6 rounded-[3px] border border-paper/10 bg-black/40 p-4">
+          <div className="flex items-center justify-between mb-3 border-b border-paper/10 pb-2">
+            <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-accent font-semibold flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+              Analog Hardware Telemetry · Station 01
+            </span>
+            <span className="font-mono text-[8px] uppercase tracking-wider text-paper/30 hidden sm:inline">
+              Mechanical Solari Readout
+            </span>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* XP Odometer */}
+            <div className="flex flex-col gap-1.5">
+              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
+                XP Odometer
+              </span>
+              <SplitFlapDisplay
+                text={`${String(xp).padStart(5, "0")} XP`}
+                columns={8}
+                size="sm"
+                accentColor="#d9f65a"
+              />
+            </div>
+
+            {/* Daily Streak */}
+            <div className="flex flex-col gap-1.5">
+              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
+                Daily Streak
+              </span>
+              <SplitFlapDisplay
+                text={`${String(streak).padStart(2, "0")} DAYS ACTIVE`}
+                columns={14}
+                size="sm"
+                accentColor="#d9f65a"
+              />
+            </div>
+
+            {/* Calibrated Track */}
+            <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
+              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-paper/40">
+                Calibrated Track
+              </span>
+              <SplitFlapDisplay
+                text={`NOW TRACKING: ${(user?.progress?.favoriteLanguage || "PYTHON").toUpperCase()} · LEVEL ${String(solvedCount + 1).padStart(2, "0")}`}
+                columns={32}
+                size="sm"
+                accentColor="#d9f65a"
+              />
+            </div>
           </div>
         </div>
 
@@ -190,44 +246,72 @@ export default function DashboardBoard() {
             {goalStatus}
           </span>
         </div>
+
+        {/* GitHub Solve Activity Telemetry Heatmap */}
+        <div className="mt-6 border-t border-paper/10 pt-5">
+          <GithubCalendar
+            solvedCount={solvedCount}
+            streak={streak}
+            username={displayName}
+          />
+        </div>
       </section>
+
+      {/* Retro-Vinyl Spine Marquee */}
+      <div className="py-2 border-y border-paper/10 bg-black/50 text-paper/40 font-mono text-[9px] uppercase tracking-[0.24em] overflow-hidden">
+        <ScrollBasedVelocity
+          text="HEXBIT STUDIO · 1050 CHALLENGES · 10 RUNTIMES · RETRO-VINYL TELEMETRY · AI SOCRATIC MENTOR · AUDITION READY · "
+          default_velocity={2.5}
+          className="text-paper/40 hover:text-accent transition-colors"
+        />
+      </div>
 
       {/* 2. Side-A Personalized Mixtape */}
       <section className="relative overflow-hidden rounded-[3px] border border-accent/30 bg-ink-2 p-6 lg:p-8">
         <div className="grain absolute inset-0 opacity-30" aria-hidden="true" />
-        <div className="relative">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent">
-            Side A · {displayName}'s {user?.progress?.favoriteLanguage || "Python"} Track
-          </p>
-          <h2 className="mt-3 font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-[1.05] tracking-[-0.02em]">
-            Personalized Mixtape
-          </h2>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: "Calibrated Rank", value: rankMap[experienceLevel] || "Apprentice (Foundations)" },
-              { label: "Mentor Style", value: personaMap[learningStyle] || "Socratic Guide (Clues Only)" },
-              { label: "Diagnostic Accuracy", value: hasScore ? `${diagnosticScore}/3` : "Self-Calibrated" },
-              { label: "Starting Bonus XP", value: bonusXp ? `+${bonusXp} XP (Diagnostic Boost)` : "Standard Start (+50 XP)" },
-            ].map((s) => (
-              <div key={s.label} className="rounded-[3px] border border-paper/10 bg-ink-3 p-3">
-                <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-paper/40">
-                  {s.label}
-                </p>
-                <p className="mt-1 font-display text-lg font-semibold text-paper">
-                  {s.value}
-                </p>
-              </div>
-            ))}
+        <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] items-center">
+          <div>
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent">
+              Side A · {displayName}'s {user?.progress?.favoriteLanguage || "Python"} Track
+            </p>
+            <h2 className="mt-3 font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-[1.05] tracking-[-0.02em]">
+              <KineticTextReveal text="Personalized Mixtape" blur={true} />
+            </h2>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { label: "Calibrated Rank", value: rankMap[experienceLevel] || "Apprentice (Foundations)" },
+                { label: "Mentor Style", value: personaMap[learningStyle] || "Socratic Guide (Clues Only)" },
+                { label: "Diagnostic Accuracy", value: hasScore ? `${diagnosticScore}/3` : "Self-Calibrated" },
+                { label: "Starting Bonus XP", value: bonusXp ? `+${bonusXp} XP (Diagnostic Boost)` : "Standard Start (+50 XP)" },
+              ].map((s) => (
+                <div key={s.label} className="rounded-[3px] border border-paper/10 bg-ink-3 p-3">
+                  <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-paper/40">
+                    {s.label}
+                  </p>
+                  <p className="mt-1 font-display text-lg font-semibold text-paper">
+                    {s.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+            {nextChallenge ? (
+              <Link
+                href={`/challenges/${nextChallenge.id}/solve`}
+                className="group mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-[12px] font-semibold text-ink"
+              >
+                Resume calibrated level
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            ) : null}
           </div>
-          {nextChallenge ? (
-            <Link
-              href={`/challenges/${nextChallenge.id}/solve`}
-              className="group mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-[12px] font-semibold text-ink"
-            >
-              Resume calibrated level
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          ) : null}
+
+          <div className="hidden md:flex justify-center shrink-0">
+            <MusicPlayer
+              trackTitle={`${user?.progress?.favoriteLanguage || "Python"} Mixtape · Level ${solvedCount + 1}`}
+              artist={`${displayName}'s Calibrated Track`}
+              autoPlay={false}
+            />
+          </div>
         </div>
       </section>
 

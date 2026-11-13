@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { logout } from "@/lib/auth";
+import SplitFlapDisplay from "@/components/ui/split-flap-display";
 
 export default function UserMenu({ tone = "dark" }) {
   const { user, loading, logout: authLogout } = useAuth();
@@ -82,7 +83,16 @@ export default function UserMenu({ tone = "dark" }) {
         <span className="max-w-[120px] truncate font-mono text-[9px] uppercase tracking-[0.14em]">
           {user.isGuest ? "Guest" : user.displayName}
         </span>
-        <span className="font-mono text-[8px] tracking-[0.12em] text-accent">
+        <div className="hidden sm:inline-flex items-center">
+          <SplitFlapDisplay
+            text={`${String(xp).padStart(4, " ")} XP`}
+            columns={7}
+            size="xs"
+            showIndicators={false}
+            className="p-0 border-0 bg-transparent shadow-none"
+          />
+        </div>
+        <span className="sm:hidden font-mono text-[8px] tracking-[0.12em] text-accent">
           {xp} XP
         </span>
       </button>
