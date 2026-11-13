@@ -1,0 +1,65 @@
+{
+  "reverse-string": {
+    "slug": "reverse-string",
+    "title": "Reverse a String",
+    "difficulty": "easy",
+    "language": "javascript",
+    "description": "Given a string, print it reversed. For example, the string \"hello\" should print \"olleh\".",
+    "starterCode": "function reverseString(s) {\n  // Print the reversed version of s\n}\n\nreverseString(\"hello\");\n",
+    "expectedOutput": "olleh"
+  },
+  "fizzbuzz": {
+    "slug": "fizzbuzz",
+    "title": "FizzBuzz (1 to 5)",
+    "difficulty": "easy",
+    "language": "javascript",
+    "description": "For each number from 1 to 5, print the number — except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both 3 and 5.",
+    "starterCode": "for (let i = 1; i <= 5; i++) {\n  // Print i, or \"Fizz\" / \"Buzz\" / \"FizzBuzz\"\n}\n",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz"
+  },
+  "palindrome-check": {
+    "slug": "palindrome-check",
+    "title": "Palindrome Check",
+    "difficulty": "easy",
+    "language": "javascript",
+    "description": "Given a word, print \"true\" if it reads the same forwards and backwards (ignoring case), otherwise print \"false\". Check the word \"racecar\".",
+    "starterCode": "function isPalindrome(word) {\n  // Return true or false, ignoring case\n}\n\nconsole.log(isPalindrome(\"racecar\"));\n",
+    "expectedOutput": "true"
+  },
+  "count-vowels": {
+    "slug": "count-vowels",
+    "title": "Count Vowels",
+    "difficulty": "easy",
+    "language": "javascript",
+    "description": "Count how many vowels (a, e, i, o, u) are in a word and print the number. Check the word \"programming\".",
+    "starterCode": "function countVowels(word) {\n  // Return the number of vowels in word\n}\n\nconsole.log(countVowels(\"programming\"));\n",
+    "expectedOutput": "3"
+  },
+  "sum-even-numbers": {
+    "slug": "sum-even-numbers",
+    "title": "Sum of Even Numbers",
+    "difficulty": "easy",
+    "language": "javascript",
+    "description": "Given an array of numbers, print the sum of only the even numbers. For [1, 2, 3, 4, 5, 6] the answer is 12.",
+    "starterCode": "function sumEvenNumbers(numbers) {\n  // Return the sum of the even numbers in the array\n}\n\nconsole.log(sumEvenNumbers([1, 2, 3, 4, 5, 6]));\n",
+    "expectedOutput": "12"
+  },
+  "two-sum": {
+    "slug": "two-sum",
+    "title": "Two Sum",
+    "difficulty": "medium",
+    "language": "javascript",
+    "description": "Given an array of numbers and a target sum, print the indices of the two numbers that add up to the target, separated by a space. Exactly one solution exists. For [2, 7, 11, 15] with target 9, the answer is \"0 1\".",
+    "starterCode": "function twoSum(nums, target) {\n  // Return [index1, index2] of the two numbers that add up to target\n}\n\nconst [i, j] = twoSum([2, 7, 11, 15], 9);\nconsole.log(i + \" \" + j);\n",
+    "expectedOutput": "0 1"
+  },
+  "factorial": {
+    "slug": "factorial",
+    "title": "Factorial",
+    "difficulty": "medium",
+    "language": "javascript",
+    "description": "Given a number n, print its factorial (n! = 1 × 2 × ... × n). The factorial of 0 is 1. Compute the factorial of 5.",
+    "starterCode": "function factorial(n) {\n  // Return n factorial (n!)\n}\n\nconsole.log(factorial(5));\n",
+    "expectedOutput": "120"
+  }
+}

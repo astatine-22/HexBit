@@ -1,15 +1,5 @@
-# dependencies
 node_modules/
-
-# next.js build output
 .next/
-out/
-build/
-
-# local env / logs
-.env*
-!.env.example
-*.log
-
-# misc
-.DS_Store
+.env
+.env*.local
+graphify-out/

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import SolveGate from "@/components/SolveGate";
 import SolveWorkspace from "@/components/SolveWorkspace";
 import { getChallengeById } from "@/lib/challenges";
 
@@ -24,5 +25,9 @@ export default async function SolvePage({ params }) {
     notFound();
   }
 
-  return <SolveWorkspace challenge={challenge} />;
+  return (
+    <SolveGate challenge={challenge}>
+      <SolveWorkspace challenge={challenge} />
+    </SolveGate>
+  );
 }

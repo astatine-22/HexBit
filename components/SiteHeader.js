@@ -1,15 +1,18 @@
 import Link from "next/link";
+import GuestBanner from "@/components/GuestBanner";
+import UserMenu from "@/components/UserMenu";
 
 const NAV_ITEMS = [
   { href: "/challenges", label: "Challenges", key: "shelf" },
   { href: "/progress", label: "Progress", key: "progress" },
+  { href: "/leaderboard", label: "Leaderboard", key: "leaderboard" },
   { href: "/about", label: "About", key: "about" },
 ];
 
 export default function SiteHeader({ active = "shelf" }) {
   return (
     <header className="sticky top-0 z-50 border-b border-paper/10 bg-ink/95 text-paper backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6 lg:px-10">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:px-10">
         <Link
           href="/challenges"
           className="group flex shrink-0 items-center gap-3"
@@ -33,7 +36,7 @@ export default function SiteHeader({ active = "shelf" }) {
 
         <nav
           aria-label="Main navigation"
-          className="-mr-2 flex items-center gap-0.5"
+          className="-mr-1 flex items-center gap-0.5 sm:-mr-2"
         >
           {NAV_ITEMS.map((item) => {
             const isActive = item.key === active;
@@ -43,7 +46,7 @@ export default function SiteHeader({ active = "shelf" }) {
                 key={item.key}
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`relative px-2.5 py-2 text-[12px] tracking-[0.01em] transition-colors sm:px-3 sm:text-[13px] ${
+                className={`relative px-1.5 py-2 text-[11px] tracking-[0.01em] transition-colors sm:px-3 sm:text-[13px] ${
                   isActive
                     ? "text-paper"
                     : "text-paper/55 hover:text-paper/90"
@@ -51,18 +54,19 @@ export default function SiteHeader({ active = "shelf" }) {
               >
                 {item.label}
                 {isActive ? (
-                  <span className="absolute inset-x-2.5 bottom-0.5 h-px bg-accent sm:inset-x-3" />
+                  <span className="absolute inset-x-1.5 bottom-0.5 h-px bg-accent sm:inset-x-3" />
                 ) : null}
               </Link>
             );
           })}
         </nav>
 
-        <div className="hidden items-center gap-2 font-mono text-[9px] uppercase tracking-[0.22em] text-paper/40 lg:flex">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-          mock mode
+        <div className="flex shrink-0 items-center gap-3">
+          <UserMenu />
         </div>
       </div>
+
+      <GuestBanner />
     </header>
   );
 }

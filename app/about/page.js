@@ -26,9 +26,14 @@ const MODULES = [
     note: "requestHint() and suggestNextChallenge() are the AI surface. They return local mock responses and carry the TODO for /api/hint and /api/recommendation.",
   },
   {
+    path: "lib/auth.js",
+    label: "Accounts",
+    note: "localStorage accounts under codementor_users, with a per-user salt and a SHA-256 password digest. Sessions live in localStorage or sessionStorage depending on Remember me. Swappable for a real backend later.",
+  },
+  {
     path: "lib/progress.js",
     label: "Progress",
-    note: "Solved ids are read and written through one adapter with a codementor.* namespace. Replace localStorage with the user_progress table when accounts arrive.",
+    note: "XP, streak, attempts, hints, and solved ids read and write the active account's progress object through one adapter. Guests get the same shape with isGuest: true.",
   },
 ];
 
@@ -71,9 +76,9 @@ export default function AboutPage() {
                 time.
               </p>
               <p className="mt-4 text-[13px] leading-relaxed text-muted">
-                No account. No network calls. Everything in this build runs from
-                local mock modules so the interaction can be judged on its own
-                terms.
+                No paid services, no network calls, no server database.
+                Accounts, sessions, and progress all live in this browser so the
+                interaction can be judged on its own terms.
               </p>
               <Link
                 href="/challenges"
@@ -158,7 +163,7 @@ export default function AboutPage() {
                       "Tailwind CSS v4 with a custom theme",
                       "Monaco editor loaded client-side only",
                       "Twelve challenges across ten languages",
-                      "Exact-match solved state, kept locally",
+                      "Exact-match solved state, saved per account",
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-2.5">
                         <span
@@ -174,9 +179,9 @@ export default function AboutPage() {
                       Deliberately out of scope
                     </p>
                     <p className="mt-3 text-[13px] leading-relaxed text-muted">
-                      No auth, no real execution, no live hint API. The mock
-                      runtime reads print-style literals only — enough to make
-                      the checkmark real without pretending to be a sandbox.
+                      No real execution and no live hint API. Auth is demo-grade
+                      localStorage only: passwords are salted and SHA-256 hashed,
+                      but clearing storage or switching browsers starts fresh.
                     </p>
                   </div>
                 </div>

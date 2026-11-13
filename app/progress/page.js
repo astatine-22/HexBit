@@ -1,4 +1,5 @@
 import ProgressBoard from "@/components/ProgressBoard";
+import RequireAuth from "@/components/RequireAuth";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { getChallenges } from "@/lib/challenges";
@@ -6,7 +7,7 @@ import { getChallenges } from "@/lib/challenges";
 export const metadata = {
   title: "Progress",
   description:
-    "Checkmarks for solved CodeMentor pressings, kept locally for this preview.",
+    "Your CodeMentor XP, daily streak, hints, attempts, and solved pressings, saved to your account in this browser.",
 };
 
 export default async function ProgressPage() {
@@ -31,21 +32,23 @@ export default async function ProgressPage() {
                   Progress<span className="text-accent">.</span>
                 </h1>
                 <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-paper/55">
-                  Checkmarks live in this browser while the app is a preview.
-                  The shape is already ready for a real account: one solved-state
-                  adapter, one list, one recommendation.
+                  XP, streak, hints, attempts, and checkmarks are saved to your
+                  account the moment they change. Everything stays in this
+                  browser for the demo — no server database.
                 </p>
               </div>
 
               <p className="rounded-full border border-paper/15 px-4 py-2 font-mono text-[8px] uppercase tracking-[0.18em] text-paper/40">
-                localStorage · codementor.solved.v1
+                localStorage · codementor_users → progress
               </p>
             </div>
           </div>
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10 lg:py-14">
-          <ProgressBoard challenges={challenges} />
+          <RequireAuth label="Loading your progress…">
+            <ProgressBoard challenges={challenges} />
+          </RequireAuth>
         </section>
       </main>
 

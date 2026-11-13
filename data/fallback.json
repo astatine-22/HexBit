@@ -4,5 +4,20 @@
   },
   "fizzbuzz": {
     "expectedOutput": "1\n2\nFizz\n4\nBuzz"
+  },
+  "palindrome-check": {
+    "expectedOutput": "true"
+  },
+  "count-vowels": {
+    "expectedOutput": "3"
+  },
+  "sum-even-numbers": {
+    "expectedOutput": "12"
+  },
+  "two-sum": {
+    "expectedOutput": "0 1"
+  },
+  "factorial": {
+    "expectedOutput": "120"
   }
 }

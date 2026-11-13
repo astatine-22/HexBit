@@ -1,378 +1,467 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import DifficultyBadge from "@/components/DifficultyBadge";
-import DifficultyLegend from "@/components/DifficultyLegend";
 import LanguageMark from "@/components/LanguageMark";
-import { ArrowRight, Check, ChevronLeft, ChevronRight } from "@/components/icons";
+import { getLanguageCurriculum } from "@/lib/challenges";
 import { getSolvedChallengeIds } from "@/lib/progress";
+import { AUTH_EVENT, PROGRESS_EVENT } from "@/lib/auth";
 import { coverStyle, getDifficulty, getLanguage } from "@/lib/ui";
+import { Check, ChevronLeft, ChevronRight } from "@/components/icons";
 
 const pad = (value) => String(value).padStart(2, "0");
 
 export default function ShelfView({ challenges }) {
+  const router = useRouter();
+  const [viewState, setViewState] = useState({
+    level: "languages",
+    selectedLanguage: null,
+    selectedChapter: null,
+  });
   const [activeIndex, setActiveIndex] = useState(0);
   const [solvedIds, setSolvedIds] = useState([]);
-  const total = challenges.length;
-  const active = challenges[activeIndex];
-  const activeDifficulty = getDifficulty(active.difficulty);
-  const activeLanguage = getLanguage(active.language);
-  const activeSolved = solvedIds.includes(active.id);
 
   useEffect(() => {
-    setSolvedIds(getSolvedChallengeIds());
+    function sync() {
+      setSolvedIds(getSolvedChallengeIds());
+    }
+
+    sync();
+    window.addEventListener(AUTH_EVENT, sync);
+    window.addEventListener(PROGRESS_EVENT, sync);
+    window.addEventListener("storage", sync);
+
+    return () => {
+      window.removeEventListener(AUTH_EVENT, sync);
+      window.removeEventListener(PROGRESS_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
   }, []);
 
-  const step = useCallback(
-    (direction) => {
-      setActiveIndex((current) => (current + direction + total) % total);
-    },
-    [total]
-  );
+  const curriculum = getLanguageCurriculum();
+  const languageEntries = Object.keys(curriculum).map((key) => {
+    const entry = curriculum[key];
+    const languageChallenges =
+      entry.chapters?.flatMap((chapter) => chapter.challenges) ?? [];
+    const solved = languageChallenges.some((item) =>
+      solvedIds.includes(item.id)
+    );
+    return {
+      id: key,
+      name: entry.name,
+      glyph: entry.glyph,
+      language: key,
+      difficulty: languageChallenges[0]?.difficulty ?? "easy",
+      challengeCount: languageChallenges.length,
+      solved,
+    };
+  });
+
+  const selectedLanguage = viewState.selectedLanguage
+    ? curriculum[viewState.selectedLanguage] ?? null
+    : null;
+  const chapterList = selectedLanguage?.chapters ?? [];
+  const selectedChapter =
+    viewState.selectedChapter !== null
+      ? chapterList.find((chapter) => chapter.id === viewState.selectedChapter) ??
+        chapterList[0] ??
+        null
+      : chapterList[0] ??
+        null;
+  const chapterChallenges = selectedChapter?.challenges ?? [];
+
+  const accentColor = viewState.selectedLanguage
+    ? getLanguage(viewState.selectedLanguage).cover.accent
+    : "#d4e157";
+
+  const currentItems =
+    viewState.level === "languages"
+      ? languageEntries
+      : viewState.level === "chapters"
+        ? chapterList.map((chapter) => ({
+            id: chapter.id,
+            title: chapter.title,
+            count: chapter.challenges.length,
+          }))
+        : chapterChallenges.map((challenge) => ({
+            id: challenge.id,
+            ...challenge,
+          }));
+
+  function openLanguage(languageId) {
+    setActiveIndex(0);
+    setViewState({
+      level: "chapters",
+      selectedLanguage: languageId,
+      selectedChapter: null,
+    });
+  }
+
+  function openChapter(chapterId) {
+    setActiveIndex(0);
+    setViewState((previous) => ({
+      ...previous,
+      level: "challenges",
+      selectedChapter: chapterId,
+    }));
+  }
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
-        return;
+      if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+        event.preventDefault();
+        const delta = event.key === "ArrowRight" ? 1 : -1;
+        setActiveIndex((current) =>
+          currentItems.length === 0
+            ? current
+            : (current + delta + currentItems.length) % currentItems.length
+        );
+      } else if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        const item = currentItems[activeIndex];
+        if (viewState.level === "languages") {
+          if (item) openLanguage(item.id);
+        } else if (viewState.level === "chapters") {
+          if (item) openChapter(item.id);
+        } else if (viewState.level === "challenges") {
+          if (item) router.push(`/challenges/${item.id}/solve`);
+        }
+      } else if (event.key === "Escape") {
+        if (viewState.level === "chapters") {
+          setViewState({
+            level: "languages",
+            selectedLanguage: null,
+            selectedChapter: null,
+          });
+        } else if (viewState.level === "challenges") {
+          setViewState((previous) => ({
+            ...previous,
+            level: "chapters",
+            selectedChapter: null,
+          }));
+        }
       }
-
-      const tag = event.target?.tagName;
-
-      if (
-        tag === "INPUT" ||
-        tag === "TEXTAREA" ||
-        tag === "SELECT" ||
-        event.target?.isContentEditable
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-      step(event.key === "ArrowLeft" ? -1 : 1);
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [step]);
+  });
 
   return (
     <>
-      <section
-        className="relative overflow-hidden bg-ink text-paper"
-        aria-label="Challenge shelf"
-      >
-        <div className="grain absolute inset-0 opacity-40" aria-hidden="true" />
+      {viewState.level === "languages" ? (
+        <section
+          className="relative overflow-hidden bg-ink text-paper"
+          aria-label="Language shelf"
+        >
+          <div className="grain absolute inset-0 opacity-40" aria-hidden="true" />
 
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="flex items-center justify-between gap-4 border-t border-paper/10 pt-5 font-mono text-[9px] uppercase tracking-[0.28em] text-paper/40">
-            <span>The shelf · {total} pressings</span>
-            <span className="hidden sm:inline">← → to browse</span>
-            <span aria-live="polite" className="text-paper/60">
-              {pad(activeIndex + 1)} / {pad(total)}
-            </span>
-          </div>
+          <div className="px-6 pb-16 lg:px-10">
+            <div className="shelf-stage">
+              <div className="shelf-glow" aria-hidden="true" />
 
-          {/* Desktop / tablet carousel */}
-          <div className="shelf-stage mt-2 hidden md:block">
-            <div className="shelf-glow" aria-hidden="true" />
+              {languageEntries.map((item, index) => {
+                const offset = index - activeIndex;
+                const distance = Math.abs(offset);
+                const isActive = offset === 0;
+                const isFar = distance > 3;
+                const difficulty = getDifficulty(item.difficulty);
 
-            {challenges.map((challenge, index) => {
-              let offset = index - activeIndex;
-
-              if (offset > total / 2) offset -= total;
-              if (offset < -total / 2) offset += total;
-
-              const distance = Math.abs(offset);
-              const isActive = offset === 0;
-              const isFar = distance > 3;
-              const difficulty = getDifficulty(challenge.difficulty);
-              const language = getLanguage(challenge.language);
-              const solved = solvedIds.includes(challenge.id);
-
-              return (
-                <Link
-                  key={challenge.id}
-                  href={`/challenges/${challenge.id}`}
-                  className={`shelf-card group ${
-                    isActive ? "is-active" : ""
-                  } ${isFar ? "is-far" : ""}`}
-                  style={{
-                    ...coverStyle(challenge.language),
-                    "--offset": offset,
-                    "--depth": `${-Math.min(distance, 5) * 36}px`,
-                    "--rot": `${Math.max(-16, Math.min(16, offset * -5))}deg`,
-                    "--diff": difficulty.hex,
-                    zIndex: isActive ? 40 : 30 - distance,
-                  }}
-                  tabIndex={isFar ? -1 : 0}
-                  aria-label={`${challenge.title} — ${difficulty.label}, ${language.label}`}
-                  aria-current={isActive ? "true" : undefined}
-                >
-                  <div className="record-peek" aria-hidden="true">
-                    <div className="record-disc" />
-                  </div>
-
-                  <div
-                    className="cover-face"
-                    style={coverStyle(challenge.language)}
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => openLanguage(item.id)}
+                    className={`shelf-card group ${isActive ? "is-active" : ""} ${
+                      isFar ? "is-far" : ""
+                    }`}
+                    style={{
+                      ...coverStyle(item.language),
+                      "--offset": offset,
+                      "--depth": `${-Math.min(distance, 5) * 36}px`,
+                      "--rot": `${Math.max(-16, Math.min(16, offset * -5))}deg`,
+                      "--diff": difficulty.hex,
+                      zIndex: isActive ? 40 : 30 - distance,
+                    }}
+                    tabIndex={isFar ? -1 : 0}
+                    aria-label={`${item.name} — ${difficulty.label} language`}
                   >
-                    <div className="cover-grain" aria-hidden="true" />
-                    <div className="cover-rings" aria-hidden="true" />
+                    <div className="record-peek" aria-hidden="true">
+                      <div className="record-disc" />
+                    </div>
 
-                    <div className="cover-body relative z-10 flex h-full flex-col justify-between">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/45">
-                            No. {pad(index + 1)}
-                          </p>
-                          {solved ? (
-                            <p className="mt-2 inline-flex items-center gap-1 font-mono text-[8px] uppercase tracking-[0.2em] text-accent">
-                              <Check className="h-3 w-3" />
-                              solved
+                    <div
+                      className="cover-face"
+                      style={coverStyle(item.language)}
+                    >
+                      <div className="cover-grain" aria-hidden="true" />
+                      <div className="cover-rings" aria-hidden="true" />
+                      <div className="cover-body relative z-10 flex h-full flex-col justify-between">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/45">
+                              No. {pad(index + 1)}
                             </p>
-                          ) : null}
+                            {item.solved ? (
+                              <p className="mt-2 inline-flex items-center gap-1 font-mono text-[8px] uppercase tracking-[0.2em] text-accent">
+                                <Check className="h-3 w-3" />
+                                solved
+                              </p>
+                            ) : null}
+                          </div>
+                          <LanguageMark language={item.language} tone="dark" />
                         </div>
-                        <LanguageMark language={challenge.language} tone="dark" />
-                      </div>
 
-                      <div>
-                        <p
-                          className="font-mono text-[9px] uppercase tracking-[0.24em]"
-                          style={{ color: language.cover.accent }}
+                        <div>
+                          <p
+                            className="font-mono text-[9px] uppercase tracking-[0.24em]"
+                            style={{ color: getLanguage(item.language).cover.accent }}
+                          >
+                            {item.language}
+                          </p>
+                          <h2 className="cover-title mt-2 line-clamp-3 font-display leading-[1.02] tracking-[-0.03em] text-paper">
+                            {item.name}
+                          </h2>
+                          <div className="mt-4 flex items-center justify-between gap-2">
+                            <DifficultyBadge
+                              difficulty={item.difficulty}
+                              tone="dark"
+                            />
+                            <span className="font-mono text-[9px] text-paper/50">
+                              {item.challengeCount} track
+                              {item.challengeCount === 1 ? "" : "s"}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between border-t border-white/10 pt-3">
+                          <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-paper/45">
+                            Open pressing
+                          </span>
+                          <ChevronRight className="h-3.5 w-3.5 text-paper/70 transition-transform duration-300 group-hover:translate-x-1" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="spine" aria-hidden="true">
+                      <span className="spine-accent" />
+                      <span className="spine-title">{item.name}</span>
+                      <span className="grid place-items-center">
+                        <span
+                          className="grid h-6 w-6 place-items-center rounded-[3px] border border-paper/20 font-mono text-[8px] leading-none"
+                          style={{ color: getLanguage(item.language).cover.accent }}
                         >
-                          {challenge.category}
-                        </p>
-                        <h2 className="cover-title mt-2 line-clamp-3 font-display leading-[1.02] tracking-[-0.03em] text-paper">
-                          {challenge.title}
-                        </h2>
-                        <div className="mt-4 flex items-center justify-between gap-2">
-                          <DifficultyBadge
-                            difficulty={challenge.difficulty}
-                            tone="dark"
-                          />
-                          <span className="font-mono text-[9px] text-paper/50">
-                            {challenge.estimatedMinutes} min
+                          {item.glyph}
+                        </span>
+                      </span>
+                      <span
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ backgroundColor: difficulty.hex }}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
+
+              <div className="shelf-board" aria-hidden="true" />
+
+              <button
+                type="button"
+                className="shelf-arrow absolute left-0 top-[45%] z-50 -translate-y-1/2"
+                onClick={() =>
+                  setActiveIndex((current) => (current - 1 + languageEntries.length) % languageEntries.length)
+                }
+                aria-label="Previous language"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                className="shelf-arrow absolute right-0 top-[45%] z-50 -translate-y-1/2"
+                onClick={() =>
+                  setActiveIndex((current) => (current + 1) % languageEntries.length)
+                }
+                aria-label="Next language"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {viewState.level === "chapters" ? (
+        <section className="relative overflow-hidden bg-ink text-paper" aria-label="Chapter shelf">
+          <div className="grain absolute inset-0 opacity-40" aria-hidden="true" />
+
+          <div className="relative mx-auto max-w-7xl px-6 py-16 lg:px-10">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveIndex(0);
+                setViewState({
+                  level: "languages",
+                  selectedLanguage: null,
+                  selectedChapter: null,
+                });
+              }}
+              className="mb-8 inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-paper/45 transition-colors hover:text-accent"
+            >
+              ← Back to Shelf
+            </button>
+
+            <div
+              className="mx-auto max-w-2xl text-center"
+              style={{ "--disc-glow-color": accentColor }}
+            >
+              <div className="flex items-center justify-center gap-3 font-mono text-[9px] uppercase tracking-[0.3em] text-paper/45">
+                <span className="h-px w-8 bg-accent/70" aria-hidden="true" />
+                CodeMentor / {viewState.selectedLanguage}
+              </div>
+
+              <h2 className="title-glowing mt-5 font-display text-[clamp(2.6rem,6vw,4.4rem)] leading-[0.9] tracking-[-0.04em]">
+                {selectedLanguage?.name}{" "}
+                <span className="italic text-accent">Chapters</span>
+              </h2>
+
+              <div className="my-8 flex flex-col items-center justify-center">
+                <div className="cd-pop" key={viewState.selectedLanguage}>
+                  <div className="turntable-stage">
+                    <div className="turntable-tilt">
+                      <div className="vinyl-disc turntable-spin h-[160px] w-[160px] sm:h-[190px] sm:w-[190px]">
+                        <div className="vinyl-label">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.16em]">
+                            {selectedLanguage?.name}
+                          </span>
+                          <span className="text-[7px] font-medium uppercase tracking-[0.18em]">
+                            LP · vol. 01
                           </span>
                         </div>
                       </div>
-
-                      <div className="flex items-center justify-between border-t border-white/10 pt-3">
-                        <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-paper/45">
-                          Open pressing
-                        </span>
-                        <ArrowRight className="h-3.5 w-3.5 text-paper/70 transition-transform duration-300 group-hover:translate-x-1" />
-                      </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="spine">
-                    <span className="spine-accent" aria-hidden="true" />
-                    <span className="font-mono text-[8px] tracking-[0.14em] text-paper/45">
+                <div
+                  className="mt-7 h-px w-64 bg-gradient-to-r from-transparent via-paper/25 to-transparent"
+                  aria-hidden="true"
+                />
+
+                <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.2em] text-paper/45">
+                  {selectedLanguage?.chapters.length} grooves on the{" "}
+                  {selectedLanguage?.name} LP
+                </p>
+              </div>
+            </div>
+
+            <div className="cd-panel mx-auto mt-10 flex max-w-2xl flex-col gap-2">
+              {chapterList.map((chapter, index) => (
+                <button
+                  key={chapter.id}
+                  type="button"
+                  onClick={() => openChapter(chapter.id)}
+                  className="group flex items-center gap-4 rounded-[3px] border border-paper/12 bg-[#121410] px-4 py-3 text-left transition-colors hover:border-accent/40 cd-groove-row"
+                >
+                  <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/35">
+                    {pad(index + 1)}
+                  </span>
+                  <span className="font-display text-[15px] text-paper">
+                    {chapter.title}
+                  </span>
+                  <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.16em] text-paper/40">
+                    {chapter.challenges.length} track
+                    {chapter.challenges.length === 1 ? "" : "s"}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-12 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveIndex(0);
+                  setViewState({
+                    level: "languages",
+                    selectedLanguage: null,
+                    selectedChapter: null,
+                  });
+                }}
+                className="rounded-full border border-paper/20 bg-ink px-6 py-3 font-mono text-[9px] uppercase tracking-[0.2em] text-paper/70 transition-colors hover:border-accent/60 hover:text-accent"
+              >
+                ⏏ Eject — Back to Shelf
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {viewState.level === "challenges" ? (
+        <section className="relative overflow-hidden bg-ink text-paper" aria-label="Chapter tracklist">
+          <div className="grain absolute inset-0 opacity-40" aria-hidden="true" />
+
+          <div className="relative mx-auto max-w-3xl px-6 py-16 lg:px-10">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveIndex(0);
+                setViewState((previous) => ({
+                  ...previous,
+                  level: "chapters",
+                  selectedChapter: null,
+                }));
+              }}
+              className="mb-8 inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-paper/45 transition-colors hover:text-accent"
+            >
+              ← Back to Chapters
+            </button>
+
+            <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-paper/45">
+              <span className="h-px w-8 bg-accent/70" aria-hidden="true" />
+              CodeMentor / {viewState.selectedLanguage}
+            </div>
+
+            <h2 className="mt-4 font-display text-[clamp(2.4rem,5vw,3.6rem)] leading-[0.95] tracking-[-0.04em]">
+              {selectedChapter?.title}{" "}
+              <span className="italic text-accent">
+                {selectedLanguage?.name}
+              </span>
+            </h2>
+
+            <div className="mt-10 flex flex-col gap-2 cd-panel">
+              {chapterChallenges.map((challenge, index) => {
+                const solved = solvedIds.includes(challenge.id);
+
+                return (
+                  <button
+                    key={challenge.id}
+                    type="button"
+                    onClick={() => router.push(`/challenges/${challenge.id}/solve`)}
+                    className="group flex items-center gap-4 rounded-[3px] border border-paper/12 bg-[#121410] px-4 py-3 text-left transition-colors hover:border-accent/40 cd-groove-row"
+                  >
+                    <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper/35">
                       {pad(index + 1)}
                     </span>
-                    <span className="spine-title">{challenge.title}</span>
-                    <span className="grid place-items-center">
-                      <span
-                        className="grid h-6 w-6 place-items-center rounded-[3px] border border-paper/20 font-mono text-[8px] leading-none"
-                        style={{ color: language.cover.accent }}
-                      >
-                        {language.glyph}
+                    <DifficultyBadge difficulty={challenge.difficulty} />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-display text-[15px] text-paper">
+                        {challenge.title}
+                      </span>
+                      <span className="mt-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-paper/40">
+                        {challenge.language} · {challenge.estimatedMinutes} min
                       </span>
                     </span>
-                    <span
-                      className="h-1.5 w-1.5 rounded-full"
-                      style={{ backgroundColor: difficulty.hex }}
-                      aria-hidden="true"
-                    />
-                  </div>
-                </Link>
-              );
-            })}
-
-            <div className="shelf-board" aria-hidden="true" />
-
-            <button
-              type="button"
-              onClick={() => step(-1)}
-              className="shelf-arrow absolute left-0 top-[45%] z-50 -translate-y-1/2"
-              aria-label="Previous challenge"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => step(1)}
-              className="shelf-arrow absolute right-0 top-[45%] z-50 -translate-y-1/2"
-              aria-label="Next challenge"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Mobile: the shelf becomes a vertical crate */}
-          <div className="mt-6 space-y-2.5 pb-10 md:hidden">
-            {challenges.map((challenge, index) => {
-              const difficulty = getDifficulty(challenge.difficulty);
-              const language = getLanguage(challenge.language);
-              const solved = solvedIds.includes(challenge.id);
-
-              return (
-                <Link
-                  key={challenge.id}
-                  href={`/challenges/${challenge.id}`}
-                  className="group flex items-center gap-4 rounded-[3px] border border-paper/10 bg-paper/[0.04] p-3 transition-colors hover:border-paper/25 hover:bg-paper/[0.07]"
-                >
-                  <span
-                    className="relative grid h-16 w-12 shrink-0 place-items-center overflow-hidden rounded-[2px] border border-paper/15"
-                    style={coverStyle(challenge.language)}
-                  >
-                    <span className="cover-grain" aria-hidden="true" />
-                    <span
-                      className="relative font-mono text-[11px] font-semibold"
-                      style={{ color: language.cover.accent }}
-                    >
-                      {language.glyph}
+                    <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-paper/40">
+                      {solved ? "solved" : "open"}
                     </span>
-                    <span
-                      className="absolute bottom-0 left-0 right-0 h-1"
-                      style={{ backgroundColor: difficulty.hex }}
-                    />
-                  </span>
-
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.22em] text-paper/40">
-                      No. {pad(index + 1)} · {language.label}
-                      {solved ? (
-                        <span className="inline-flex items-center gap-1 text-accent">
-                          <Check className="h-3 w-3" /> solved
-                        </span>
-                      ) : null}
-                    </span>
-                    <span className="mt-1.5 block truncate font-display text-lg leading-tight text-paper">
-                      {challenge.title}
-                    </span>
-                    <span className="mt-1.5 flex items-center gap-2">
-                      <DifficultyBadge
-                        difficulty={challenge.difficulty}
-                        tone="dark"
-                      />
-                      <span className="font-mono text-[9px] text-paper/40">
-                        {challenge.estimatedMinutes} min
-                      </span>
-                    </span>
-                  </span>
-
-                  <ArrowRight className="h-4 w-4 shrink-0 text-paper/40 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-paper/80" />
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Scrubber + active challenge */}
-      <section className="border-b border-line bg-paper">
-        <div className="mx-auto max-w-7xl px-6 py-10 lg:px-10 lg:py-14">
-          <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
-            <div key={active.id} className="rise">
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[9px] uppercase tracking-[0.28em] text-muted">
-                <span className="text-ink">No. {pad(activeIndex + 1)}</span>
-                <span className="h-px w-8 bg-line" aria-hidden="true" />
-                <span>{activeLanguage.label}</span>
-                <span className="text-muted-2">{active.category}</span>
-                {activeSolved ? (
-                  <span className="inline-flex items-center gap-1 text-[#1f6a48]">
-                    <Check className="h-3 w-3" />
-                    solved
-                  </span>
-                ) : null}
-              </div>
-
-              <h2 className="mt-3 font-display text-[clamp(2rem,4.4vw,3.4rem)] leading-[0.95] tracking-[-0.035em]">
-                {active.title}
-              </h2>
-
-              <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
-                <DifficultyBadge difficulty={active.difficulty} />
-                <span className="h-1 w-1 rounded-full bg-line" aria-hidden="true" />
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-                  {active.estimatedMinutes} min
-                </span>
-                <span className="hidden h-1 w-1 rounded-full bg-line sm:block" aria-hidden="true" />
-                <span className="hidden max-w-md text-sm text-muted sm:line-clamp-1">
-                  {active.description}
-                </span>
-              </div>
-            </div>
-
-            <Link
-              href={`/challenges/${active.id}`}
-              className="group inline-flex w-fit items-center gap-3 rounded-full bg-ink px-6 py-3.5 text-[12px] font-medium text-paper transition-transform duration-200 hover:-translate-y-0.5"
-            >
-              View pressing
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          </div>
-
-          <div className="mt-10">
-            <div className="relative">
-              <div
-                className="absolute inset-x-0 top-10 h-px bg-line"
-                aria-hidden="true"
-              />
-              <div className="relative flex items-end">
-                {challenges.map((challenge, index) => {
-                  const difficulty = getDifficulty(challenge.difficulty);
-                  const isActive = index === activeIndex;
-
-                  return (
-                    <button
-                      key={challenge.id}
-                      type="button"
-                      onClick={() => setActiveIndex(index)}
-                      className="group flex flex-1 flex-col items-center"
-                      aria-label={`${challenge.title}, ${difficulty.label}`}
-                      aria-current={isActive ? "true" : undefined}
-                    >
-                      <span className="flex h-10 items-end">
-                        <span
-                          className="scrub-tick w-[4px] rounded-full"
-                          style={{
-                            backgroundColor: difficulty.hex,
-                            height: isActive ? 34 : 14,
-                            width: isActive ? 5 : 4,
-                            opacity: isActive ? 1 : 0.5,
-                            boxShadow: isActive
-                              ? `0 0 0 4px ${difficulty.hex}1f, 0 0 20px ${difficulty.hex}66`
-                              : "none",
-                          }}
-                        />
-                      </span>
-                      <span
-                        className={`mt-2.5 font-mono text-[9px] transition-colors ${
-                          isActive
-                            ? "text-ink"
-                            : "text-muted-2 group-hover:text-muted"
-                        }`}
-                      >
-                        {pad(index + 1)}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
-
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-            <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-2">
-              One tick per pressing · color = difficulty
-            </p>
-            <DifficultyLegend />
-          </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
     </>
   );
 }

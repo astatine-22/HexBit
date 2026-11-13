@@ -4,11 +4,24 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import DifficultyBadge from "@/components/DifficultyBadge";
+import GuestBanner from "@/components/GuestBanner";
 import MentorPanel from "@/components/MentorPanel";
+import UserMenu from "@/components/UserMenu";
 import { ArrowLeft, Check, Play } from "@/components/icons";
 import { runCode } from "@/lib/executor";
-import { requestHint } from "@/lib/mentor";
-import { getSolvedChallengeIds, markChallengeSolved } from "@/lib/progress";
+import {
+  requestHint,
+  getSolutionSummary,
+  explainError,
+  suggestNextChallenge,
+} from "@/lib/mentor";
+import {
+  getAttemptCount,
+  getSolvedChallengeIds,
+  markChallengeSolved,
+  recordAttempt,
+  recordHintRequest,
+} from "@/lib/progress";
 import { getLanguage } from "@/lib/ui";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
@@ -49,6 +62,23 @@ function normalize(value) {
     .trim();
 }
 
+function copyToClipboard(text) {
+  if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text);
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+  return Promise.resolve();
+}
+
 export default function SolveWorkspace({ challenge }) {
   const language = getLanguage(challenge.language);
   const [code, setCode] = useState(challenge.starterCode);
@@ -57,10 +87,52 @@ export default function SolveWorkspace({ challenge }) {
   const [attempts, setAttempts] = useState(0);
   const [solved, setSolved] = useState(false);
   const [runMatched, setRunMatched] = useState(false);
+  const [explanation, setExplanation] = useState(null);
+  const [summary, setSummary] = useState(null);
+  const [next, setNext] = useState(null);
   const hintRequestCount = useRef(0);
+  const editorRef = useRef(null);
+  const shellRef = useRef(null);
+  const menuRef = useRef(null);
+  const copyTimer = useRef(null);
+  const noticeTimer = useRef(null);
+  const [floatingMenu, setFloatingMenu] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    above: true,
+    selectedText: "",
+    range: null,
+  });
+  const [copied, setCopied] = useState(false);
+  const [assistBusy, setAssistBusy] = useState(null);
+  const [assistNotice, setAssistNotice] = useState("");
+  const [incomingMentorMessage, setIncomingMentorMessage] = useState(null);
+
+  useEffect(() => {
+    function handlePointerDown(event) {
+      if (menuRef.current && menuRef.current.contains(event.target)) {
+        return;
+      }
+      setFloatingMenu((previous) =>
+        previous.visible ? { ...previous, visible: false } : previous
+      );
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+      if (copyTimer.current) window.clearTimeout(copyTimer.current);
+      if (noticeTimer.current) window.clearTimeout(noticeTimer.current);
+    };
+  }, []);
 
   useEffect(() => {
     setSolved(getSolvedChallengeIds().includes(challenge.id));
+    setAttempts(getAttemptCount(challenge.id));
   }, [challenge.id]);
 
   function handleEditorWillMount(monaco) {
@@ -94,6 +166,286 @@ export default function SolveWorkspace({ challenge }) {
     });
   }
 
+  function handleEditorDidMount(editor) {
+    editorRef.current = editor;
+
+    editor.onDidChangeCursorSelection(() => {
+      setCopied(false);
+      positionFloatingMenu(editor);
+    });
+
+    editor.onDidScrollChange(() => {
+      positionFloatingMenu(editor);
+    });
+  }
+
+  function positionFloatingMenu(editor) {
+    if (!editor) {
+      return;
+    }
+
+    const selection = editor.getSelection();
+    if (!selection || selection.isEmpty()) {
+      setFloatingMenu((previous) => ({ ...previous, visible: false }));
+      return;
+    }
+
+    const model = editor.getModel();
+    const selectedText = model ? model.getValueInRange(selection).trim() : "";
+    if (!selectedText) {
+      setFloatingMenu((previous) => ({ ...previous, visible: false }));
+      return;
+    }
+
+    const coordinates = editor.getScrolledVisiblePosition(selection.getStartPosition());
+    if (!coordinates) {
+      setFloatingMenu((previous) => ({ ...previous, visible: false }));
+      return;
+    }
+
+    const endCoordinates = editor.getScrolledVisiblePosition(selection.getEndPosition());
+    const shellWidth = shellRef.current?.clientWidth ?? 0;
+    const shellHeight = shellRef.current?.clientHeight ?? 0;
+
+    if (coordinates.top < -EDITOR_OPTIONS.lineHeight || (shellHeight && coordinates.top > shellHeight)) {
+      setFloatingMenu((previous) => ({ ...previous, visible: false }));
+      return;
+    }
+
+    const menuWidth = Math.min(500, Math.max(shellWidth - 16, 0));
+    const maxLeft = shellWidth ? Math.max(8, shellWidth - menuWidth - 8) : coordinates.left;
+    const left = shellWidth
+      ? Math.min(Math.max(coordinates.left, 8), maxLeft)
+      : coordinates.left;
+    const above = coordinates.top > 52;
+
+    setFloatingMenu({
+      visible: true,
+      x: left,
+      y: above
+        ? coordinates.top - 8
+        : (endCoordinates ?? coordinates).top + EDITOR_OPTIONS.lineHeight + 8,
+      above,
+      selectedText,
+      range: selection,
+    });
+  }
+
+  function hideFloatingMenu() {
+    setFloatingMenu((previous) => ({ ...previous, visible: false }));
+  }
+
+  function showAssistNotice(message) {
+    setAssistNotice(message);
+    if (noticeTimer.current) {
+      window.clearTimeout(noticeTimer.current);
+    }
+    noticeTimer.current = window.setTimeout(() => setAssistNotice(""), 4000);
+  }
+
+  async function handleCopySelection() {
+    if (!floatingMenu.selectedText) {
+      return;
+    }
+
+    try {
+      await copyToClipboard(floatingMenu.selectedText);
+      setCopied(true);
+      if (copyTimer.current) {
+        window.clearTimeout(copyTimer.current);
+      }
+      copyTimer.current = window.setTimeout(() => setCopied(false), 1400);
+    } catch {
+      showAssistNotice("Could not copy — your browser blocked clipboard access.");
+    }
+  }
+
+  function handleAddToChat() {
+    if (!floatingMenu.selectedText) {
+      return;
+    }
+
+    setIncomingMentorMessage({
+      id: Date.now(),
+      kind: "snippet",
+      snippet: floatingMenu.selectedText,
+    });
+    hideFloatingMenu();
+  }
+
+  async function handleExplainSection() {
+    const snippet = floatingMenu.selectedText;
+    if (!snippet || assistBusy) {
+      return;
+    }
+
+    setAssistBusy("explain");
+
+    try {
+      const res = await fetch("/api/explain-error", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          challengeId: challenge.id,
+          challengeDescription: challenge.description,
+          code: snippet,
+          language: challenge.language,
+          action: "explain_snippet",
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data?.explanation) {
+        throw new Error(data?.error || "The AI did not return an explanation.");
+      }
+
+      setIncomingMentorMessage({
+        id: Date.now(),
+        kind: "explain",
+        text: data.explanation,
+        snippet,
+      });
+    } catch (error) {
+      showAssistNotice(error.message || "Couldn't explain that snippet. Try again.");
+    } finally {
+      setAssistBusy(null);
+      hideFloatingMenu();
+    }
+  }
+
+  async function handleCompleteCode() {
+    const snippet = floatingMenu.selectedText;
+    if (!snippet || assistBusy) {
+      return;
+    }
+
+    /* -------------------------------------------------------------------------
+     * POINT PENALTY SYSTEM (RESERVED FOR FUTURE SCORING RELEASE)
+     * -------------------------------------------------------------------------
+     * Uncomment the lines below once student points/leaderboard are active:
+     *
+     * const POINT_COST_COMPLETE = 20;
+     * deductUserPoints({
+     *   userId: getAnonymousUserId(),
+     *   challengeId: challenge.id,
+     *   deduction: POINT_COST_COMPLETE,
+     *   reason: "Used AI snippet completion"
+     * });
+     * showNotification(`- ${POINT_COST_COMPLETE} points for AI auto-completion`);
+     * ------------------------------------------------------------------------- */
+
+    setAssistBusy("complete");
+
+    try {
+      const res = await fetch("/api/hint", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          challengeId: challenge.id,
+          challengeDescription: challenge.description,
+          userCode: code,
+          snippet,
+          language: challenge.language,
+          action: "complete_snippet",
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data?.completedSnippet) {
+        throw new Error(data?.error || "The AI did not return a completion.");
+      }
+
+      const editor = editorRef.current;
+      const range = floatingMenu.range;
+      if (!editor || !range) {
+        throw new Error("The editor is not ready — reselect the snippet and try again.");
+      }
+
+      editor.pushUndoStop();
+      editor.executeEdits("ai-assist", [
+        {
+          range,
+          text: data.completedSnippet,
+          forceMoveMarkers: true,
+        },
+      ]);
+      editor.pushUndoStop();
+      editor.setPosition(range.getStartPosition());
+      setCode(editor.getValue());
+    } catch (error) {
+      showAssistNotice(error.message || "Couldn't complete that snippet. Try again.");
+    } finally {
+      setAssistBusy(null);
+      hideFloatingMenu();
+    }
+  }
+
+  async function handleCorrectCode() {
+    const snippet = floatingMenu.selectedText;
+    if (!snippet || assistBusy) {
+      return;
+    }
+
+    /* -------------------------------------------------------------------------
+     * POINT PENALTY SYSTEM (RESERVED FOR FUTURE SCORING RELEASE)
+     * -------------------------------------------------------------------------
+     * Uncomment the lines below once student points/leaderboard are active:
+     *
+     * const POINT_COST_CORRECT = 15;
+     * deductUserPoints({
+     *   userId: getAnonymousUserId(),
+     *   challengeId: challenge.id,
+     *   deduction: POINT_COST_CORRECT,
+     *   reason: "Used AI bug correction"
+     * });
+     * showNotification(`- ${POINT_COST_CORRECT} points for AI bug correction`);
+     * ------------------------------------------------------------------------- */
+
+    setAssistBusy("correct");
+
+    try {
+      const res = await fetch("/api/explain-error", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          challengeId: challenge.id,
+          challengeDescription: challenge.description,
+          code: snippet,
+          language: challenge.language,
+          fixRequested: true,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data?.correctedSnippet) {
+        throw new Error(data?.error || "The AI did not return a correction.");
+      }
+
+      const editor = editorRef.current;
+      const range = floatingMenu.range;
+      if (!editor || !range) {
+        throw new Error("The editor is not ready — reselect the snippet and try again.");
+      }
+
+      editor.pushUndoStop();
+      editor.executeEdits("ai-assist", [
+        {
+          range,
+          text: data.correctedSnippet,
+          forceMoveMarkers: true,
+        },
+      ]);
+      editor.pushUndoStop();
+      editor.setPosition(range.getStartPosition());
+      setCode(editor.getValue());
+    } catch (error) {
+      showAssistNotice(error.message || "Couldn't correct that snippet. Try again.");
+    } finally {
+      setAssistBusy(null);
+      hideFloatingMenu();
+    }
+  }
+
   async function handleRun() {
     if (running) {
       return;
@@ -102,8 +454,8 @@ export default function SolveWorkspace({ challenge }) {
     setRunning(true);
 
     try {
-      // TODO: executor.js will swap this mock for a Piston-backed API route.
-      const result = await runCode(challenge.language, code);
+      // Live backend execution via /api/run + /api/check.
+      const result = await runCode(challenge.language, code, challenge);
       setOutput(result);
       setAttempts((current) => current + 1);
 
@@ -116,7 +468,24 @@ export default function SolveWorkspace({ challenge }) {
 
       if (matches) {
         setSolved(true);
-        markChallengeSolved(challenge.id);
+        markChallengeSolved(challenge.id, attempts + 1);
+
+        try {
+          const summaryData = await getSolutionSummary({
+            challengeId: challenge.id,
+            code,
+            language: challenge.language,
+          });
+          setSummary(summaryData?.summary ?? null);
+        } catch {
+          setSummary(null);
+        }
+      } else {
+        recordAttempt({
+          challengeId: challenge.id,
+          passed: false,
+          attemptCount: attempts + 1,
+        });
       }
     } catch {
       setOutput({
@@ -132,16 +501,44 @@ export default function SolveWorkspace({ challenge }) {
     }
   }
 
-  async function handleRequestHint() {
+  async function handleExplainError() {
+    if (!stderr) {
+      return;
+    }
+
+    try {
+      const data = await explainError({
+        challengeId: challenge.id,
+        code,
+        language: challenge.language,
+        error: stderr,
+      });
+      setExplanation(data?.explanation ?? stderr);
+    } catch {
+      setExplanation(stderr);
+    }
+  }
+
+  async function handleNextChallenge() {
+    try {
+      const data = await suggestNextChallenge({ solvedIds: [challenge.id] });
+      setNext(data);
+    } catch {
+      // recommendation is optional — ignore failures
+    }
+  }
+
+  async function handleRequestHint({ snippet } = {}) {
     // TODO: replace with real API call to /api/hint
     const hint = await requestHint({
       challengeId: challenge.id,
-      userCode: code,
-      errorMessage: output?.stderr || "",
+      userCode: snippet || code,
+      errorMessage: snippet ? "" : output?.stderr || "",
       attemptCount: attempts + hintRequestCount.current,
     });
 
     hintRequestCount.current += 1;
+    recordHintRequest(challenge.id);
     return hint;
   }
 
@@ -207,8 +604,12 @@ export default function SolveWorkspace({ challenge }) {
           >
             Shelf
           </Link>
+
+          <UserMenu />
         </div>
       </header>
+
+      <GuestBanner />
 
       <main className="flex-1 px-3 py-3 sm:px-4 lg:px-5 lg:py-4">
         <div className="grid min-h-0 gap-3 lg:h-[calc(100dvh-104px)] lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)] lg:gap-4">
@@ -239,16 +640,102 @@ export default function SolveWorkspace({ challenge }) {
               </button>
             </div>
 
-            <div className="monaco-shell relative h-[440px] min-h-0 w-full lg:h-auto lg:flex-1">
+            <div
+              ref={shellRef}
+              className="monaco-shell relative h-[440px] min-h-0 w-full lg:h-auto lg:flex-1"
+            >
               <MonacoEditor
                 height="100%"
                 language={language.monaco}
                 value={code}
                 onChange={(value) => setCode(value ?? "")}
                 beforeMount={handleEditorWillMount}
+                onMount={handleEditorDidMount}
                 theme="codementor"
                 options={EDITOR_OPTIONS}
               />
+
+              {floatingMenu.visible ? (
+                <div
+                  ref={menuRef}
+                  role="toolbar"
+                  aria-label="Code assist actions"
+                  className="code-assist-pop absolute z-50 flex max-w-full flex-wrap items-center gap-1 rounded-full border border-paper/20 bg-ink/95 px-2 py-1 shadow-2xl backdrop-blur-md"
+                  style={{
+                    left: `${floatingMenu.x}px`,
+                    top: `${floatingMenu.y}px`,
+                    transform: floatingMenu.above ? "translateY(-100%)" : "none",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={handleAddToChat}
+                    className="flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] text-paper/80 transition-colors hover:bg-paper/10 hover:text-accent"
+                    title="Discuss this snippet with Mentor"
+                  >
+                    <span>💬</span> Ask Expert
+                  </button>
+
+                  <span className="h-3 w-px bg-paper/15" aria-hidden="true" />
+
+                  <button
+                    type="button"
+                    onClick={handleExplainSection}
+                    disabled={assistBusy !== null}
+                    className="flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] text-paper/80 transition-colors hover:bg-paper/10 hover:text-accent disabled:cursor-wait disabled:opacity-50"
+                    title="Explain what this snippet does"
+                  >
+                    <span>🔍</span> {assistBusy === "explain" ? "Explaining…" : "Explain"}
+                  </button>
+
+                  <span className="h-3 w-px bg-paper/15" aria-hidden="true" />
+
+                  <button
+                    type="button"
+                    onClick={handleCopySelection}
+                    className="flex items-center gap-1 rounded-full px-2 py-1 font-mono text-[11px] text-paper/60 transition-colors hover:bg-paper/10 hover:text-paper"
+                    title="Copy to clipboard"
+                  >
+                    <span>{copied ? "✓" : "📋"}</span>{" "}
+                    {copied ? "Copied" : "Copy"}
+                  </button>
+
+                  <span className="h-3 w-px bg-paper/15" aria-hidden="true" />
+
+                  <button
+                    type="button"
+                    onClick={handleCompleteCode}
+                    disabled={assistBusy !== null}
+                    className="flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] text-paper/80 transition-colors hover:bg-paper/10 hover:text-[#7bddaa] disabled:cursor-wait disabled:opacity-50"
+                    title="Complete this logic with AI"
+                  >
+                    <span>✨</span>{" "}
+                    {assistBusy === "complete" ? "Completing…" : "Complete"}
+                  </button>
+
+                  <span className="h-3 w-px bg-paper/15" aria-hidden="true" />
+
+                  <button
+                    type="button"
+                    onClick={handleCorrectCode}
+                    disabled={assistBusy !== null}
+                    className="flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] text-paper/80 transition-colors hover:bg-paper/10 hover:text-[#ee917c] disabled:cursor-wait disabled:opacity-50"
+                    title="Fix bugs in this snippet"
+                  >
+                    <span>🛠️</span>{" "}
+                    {assistBusy === "correct" ? "Fixing…" : "Correct"}
+                  </button>
+                </div>
+              ) : null}
+
+              {assistNotice ? (
+                <div
+                  role="status"
+                  className="absolute bottom-3 left-1/2 z-40 max-w-[calc(100%-24px)] -translate-x-1/2 rounded-full border border-[#ee917c]/30 bg-[#1a1210]/95 px-3 py-1.5 text-center font-mono text-[10px] leading-snug text-[#ee917c] shadow-xl backdrop-blur"
+                >
+                  {assistNotice}
+                </div>
+              ) : null}
             </div>
 
             <div className="flex items-center justify-between gap-3 border-t border-paper/10 px-3 py-2 font-mono text-[8px] uppercase tracking-[0.16em] text-paper/30 sm:px-4">
@@ -309,6 +796,22 @@ export default function SolveWorkspace({ challenge }) {
                       </pre>
                     ) : null}
 
+                    {stderr ? (
+                      <button
+                        type="button"
+                        onClick={handleExplainError}
+                        className="self-start rounded-full border border-accent/40 bg-accent/10 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-accent transition-opacity hover:opacity-90"
+                      >
+                        Explain error with AI
+                      </button>
+                    ) : null}
+
+                    {explanation ? (
+                      <pre className="whitespace-pre-wrap break-words rounded-[3px] border border-paper/12 bg-[#121410] p-3 font-mono text-[11px] leading-relaxed text-paper/70">
+                        {explanation}
+                      </pre>
+                    ) : null}
+
                     {!stdout && !stderr ? (
                       <p className="text-paper/35">
                         Program finished with no printable output. The mock
@@ -332,6 +835,22 @@ export default function SolveWorkspace({ challenge }) {
                         Mock run complete · compare with expected output
                       </p>
                     )}
+
+                    {solved && summary ? (
+                      <p className="border-t border-paper/10 pt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#8fe0b7]">
+                        Mentor summary · {summary}
+                      </p>
+                    ) : null}
+
+                    {solved ? (
+                      <button
+                        type="button"
+                        onClick={handleNextChallenge}
+                        className="border-t border-paper/10 pt-3 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2.5 text-[12px] font-semibold text-ink transition-opacity hover:opacity-90"
+                      >
+                        Next Recommended Challenge
+                      </button>
+                    ) : null}
                   </div>
                 )}
               </div>
@@ -353,11 +872,36 @@ export default function SolveWorkspace({ challenge }) {
                 errorMessage={stderr}
                 attemptCount={attempts}
                 onRequestHint={handleRequestHint}
+                incomingMessage={incomingMentorMessage}
+                onMessageConsumed={() => setIncomingMentorMessage(null)}
               />
             </div>
           </div>
         </div>
       </main>
+
+      <style jsx>{`
+        .code-assist-pop {
+          animation: code-assist-pop 140ms ease-out both;
+        }
+
+        @keyframes code-assist-pop {
+          from {
+            opacity: 0;
+            translate: 0 4px;
+          }
+          to {
+            opacity: 1;
+            translate: 0 0;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .code-assist-pop {
+            animation: none;
+          }
+        }
+      `}</style>
     </div>
   );
 }

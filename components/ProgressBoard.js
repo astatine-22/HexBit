@@ -3,22 +3,56 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import DifficultyBadge from "@/components/DifficultyBadge";
+import LanguageMark from "@/components/LanguageMark";
 import { ArrowRight, Check, Sparkle } from "@/components/icons";
 import { getDifficulty, getLanguage } from "@/lib/ui";
 import { suggestNextChallenge } from "@/lib/mentor";
+import { AUTH_EVENT, PROGRESS_EVENT } from "@/lib/auth";
 import {
   clearSolvedChallenges,
+  getActiveProgress,
   getSolvedChallengeIds,
 } from "@/lib/progress";
 
 const pad = (value) => String(value).padStart(2, "0");
 
+function readProgressState() {
+  const progress = getActiveProgress();
+
+  return {
+    solvedIds: getSolvedChallengeIds(),
+    stats: progress?.leaderboardStats ?? {
+      xp: 0,
+      streak: 0,
+      hintsUsed: 0,
+      totalAttempts: 0,
+      challengesSolved: 0,
+    },
+  };
+}
+
 export default function ProgressBoard({ challenges }) {
   const [solvedIds, setSolvedIds] = useState(null);
+  const [stats, setStats] = useState(null);
   const [suggestion, setSuggestion] = useState(null);
 
   useEffect(() => {
-    setSolvedIds(getSolvedChallengeIds());
+    function sync() {
+      const next = readProgressState();
+      setSolvedIds(next.solvedIds);
+      setStats(next.stats);
+    }
+
+    sync();
+    window.addEventListener(AUTH_EVENT, sync);
+    window.addEventListener(PROGRESS_EVENT, sync);
+    window.addEventListener("storage", sync);
+
+    return () => {
+      window.removeEventListener(AUTH_EVENT, sync);
+      window.removeEventListener(PROGRESS_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
   }, []);
 
   useEffect(() => {
@@ -45,18 +79,88 @@ export default function ProgressBoard({ challenges }) {
     solvedSet.has(challenge.id)
   ).length;
   const progress = Math.round((solvedCount / challenges.length) * 100);
+  const xp = stats?.xp ?? 0;
+  const streak = stats?.streak ?? 0;
+  const hintsUsed = stats?.hintsUsed ?? 0;
+  const totalAttempts = stats?.totalAttempts ?? 0;
+
+  // Group challenges by language for the track grid.
+  const languageGroups = challenges.reduce((accumulator, challenge) => {
+    if (!accumulator[challenge.language]) {
+      accumulator[challenge.language] = [];
+    }
+    accumulator[challenge.language].push(challenge);
+    return accumulator;
+  }, {});
+
+  const languageTracks = Object.keys(languageGroups)
+    .map((language) => {
+      const group = languageGroups[language];
+      const total = group.length;
+      const solved = group.filter((challenge) =>
+        solvedSet.has(challenge.id)
+      ).length;
+      const percentage = total ? Math.round((solved / total) * 100) : 0;
+
+      const byDifficulty = ["easy", "medium", "hard"].reduce(
+        (accumulator, difficulty) => {
+          const subset = group.filter(
+            (challenge) => challenge.difficulty === difficulty
+          );
+          accumulator[difficulty] = {
+            solved: subset.filter((challenge) =>
+              solvedSet.has(challenge.id)
+            ).length,
+            total: subset.length,
+          };
+          return accumulator;
+        },
+        {}
+      );
+
+      return { language, total, solved, percentage, byDifficulty };
+    })
+    .sort((a, b) =>
+      getLanguage(a.language).label.localeCompare(
+        getLanguage(b.language).label
+      )
+    );
 
   function handleReset() {
-    setSolvedIds(clearSolvedChallenges());
+    const next = clearSolvedChallenges();
+    const fresh = readProgressState();
+    setSolvedIds(next);
+    setStats(fresh.stats);
   }
 
   return (
     <div>
+      <section className="mb-6 grid grid-cols-2 gap-px overflow-hidden rounded-[3px] border border-line bg-line sm:grid-cols-4">
+        {[
+          { label: "XP", value: xp, hint: "+10 per first solve" },
+          { label: "Daily streak", value: `${streak}d`, hint: "consecutive solve days" },
+          { label: "Hints used", value: hintsUsed, hint: "across all pressings" },
+          { label: "Run attempts", value: totalAttempts, hint: "all challenges" },
+        ].map((item) => (
+          <div key={item.label} className="bg-white/60 px-5 py-4">
+            <p className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-2">
+              {item.label}
+            </p>
+            <p className="mt-2 font-display text-[clamp(1.7rem,3vw,2.2rem)] leading-none tracking-[-0.03em]">
+              {loaded ? item.value : "—"}
+            </p>
+            <p className="mt-1.5 font-mono text-[7px] uppercase tracking-[0.14em] text-muted-2">
+              {item.hint}
+            </p>
+          </div>
+        ))}
+      </section>
+
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
         <section className="rounded-[3px] border border-line bg-white/40 p-6 lg:p-8">
           <div className="flex items-center justify-between gap-4">
             <p className="font-mono text-[9px] uppercase tracking-[0.26em] text-muted-2">
-              Solved pressings
+              Overall completion
             </p>
             <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-2">
               {loaded ? `${progress}%` : "reading…"}
@@ -145,7 +249,7 @@ export default function ProgressBoard({ challenges }) {
 
             <p className="mt-3 flex-1 text-[13px] leading-relaxed text-paper/50">
               {suggestion?.reason ??
-                "Reading your local progress and picking a sensible next pressing."}
+                "Reading your saved progress and picking a sensible next pressing."}
             </p>
 
             {suggestion?.challenge ? (
@@ -165,10 +269,10 @@ export default function ProgressBoard({ challenges }) {
         </section>
       </div>
 
-      <section className="mt-10 overflow-hidden rounded-[3px] border border-line">
+      <section className="mt-10">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-white/40 px-5 py-3.5">
           <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-muted">
-            The crate · all pressings
+            Language tracks · explore a level list
           </p>
           <button
             type="button"
@@ -176,57 +280,81 @@ export default function ProgressBoard({ challenges }) {
             disabled={!loaded || solvedCount === 0}
             className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted underline-offset-4 transition-colors hover:text-ink hover:underline disabled:cursor-not-allowed disabled:opacity-35"
           >
-            Reset local progress
+            Reset my progress
           </button>
         </div>
 
-        <ul className="divide-y divide-line">
-          {challenges.map((challenge, index) => {
-            const solved = solvedSet.has(challenge.id);
-            const language = getLanguage(challenge.language);
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {languageTracks.map((track) => {
+            const meta = getLanguage(track.language);
 
             return (
-              <li key={challenge.id}>
-                <Link
-                  href={`/challenges/${challenge.id}/solve`}
-                  className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-white/50"
+              <Link
+                key={track.language}
+                href={`/progress/${track.language}`}
+                className="group relative flex flex-col overflow-hidden rounded-[3px] border border-line bg-white/60 p-5 transition-colors hover:bg-white"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <LanguageMark language={track.language} showLabel />
+                  <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-2">
+                    {track.solved} / {track.total}
+                  </span>
+                </div>
+
+                <div className="mt-4">
+                  <p className="font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-none tracking-[-0.03em]">
+                    {loaded ? `${track.percentage}%` : "—"}
+                  </p>
+                  <p className="mt-1 font-mono text-[8px] uppercase tracking-[0.16em] text-muted-2">
+                    {track.solved} of {track.total} levels solved
+                  </p>
+                </div>
+
+                <div
+                  className="mt-4 h-1.5 overflow-hidden rounded-full bg-paper-3"
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={track.total}
+                  aria-valuenow={loaded ? track.solved : 0}
+                  aria-label={`${meta.label} progress`}
                 >
-                  <span className="w-7 shrink-0 font-mono text-[9px] text-muted-2">
-                    {pad(index + 1)}
-                  </span>
+                  <div
+                    className="h-full rounded-full bg-ink transition-[width] duration-500"
+                    style={{
+                      width: `${loaded ? track.percentage : 0}%`,
+                    }}
+                  />
+                </div>
 
-                  <span
-                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border transition-colors ${
-                      solved
-                        ? "border-[#2f7d58] bg-[#2f7d58] text-paper"
-                        : "border-line text-transparent"
-                    }`}
-                    aria-label={solved ? "Solved" : "Not solved"}
-                  >
-                    <Check className="h-3 w-3" />
-                  </span>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {["easy", "medium", "hard"].map((difficulty) => {
+                    const entry = track.byDifficulty[difficulty];
+                    const metaDifficulty = getDifficulty(difficulty);
 
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[14px] font-medium tracking-[-0.01em]">
-                      {challenge.title}
-                    </span>
-                    <span className="mt-0.5 block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-2">
-                      {language.label} · {challenge.category}
-                    </span>
-                  </span>
+                    return (
+                      <span
+                        key={difficulty}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.14em] text-muted"
+                      >
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ backgroundColor: metaDifficulty.hex }}
+                          aria-hidden="true"
+                        />
+                        {entry.solved}/{entry.total}
+                      </span>
+                    );
+                  })}
+                </div>
 
-                  <span className="hidden shrink-0 sm:block">
-                    <DifficultyBadge difficulty={challenge.difficulty} />
-                  </span>
-                  <span className="hidden w-12 shrink-0 text-right font-mono text-[9px] text-muted-2 md:block">
-                    {challenge.estimatedMinutes}m
-                  </span>
-                  <ArrowRight className="h-4 w-4 shrink-0 text-muted-2 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-ink" />
-                </Link>
-              </li>
+                <span className="mt-5 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-ink transition-transform duration-300 group-hover:translate-x-1">
+                  Explore levels
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </Link>
             );
           })}
-        </ul>
+        </div>
       </section>
     </div>
   );

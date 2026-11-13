@@ -1,0 +1,2112 @@
+[
+  {
+    "id": "java-001-sum-of-two-numbers",
+    "title": "Level 1: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 3 and 6, print their sum.",
+    "starterCode": "// Print the sum of 3 and 6\nSystem.out.println(0);",
+    "expectedOutput": "9",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 3 + 6."
+    ]
+  },
+  {
+    "id": "java-002-sum-of-two-numbers",
+    "title": "Level 2: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 4 and 7, print their sum.",
+    "starterCode": "// Print the sum of 4 and 7\nSystem.out.println(0);",
+    "expectedOutput": "11",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 4 + 7."
+    ]
+  },
+  {
+    "id": "java-003-sum-of-two-numbers",
+    "title": "Level 3: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 5 and 8, print their sum.",
+    "starterCode": "// Print the sum of 5 and 8\nSystem.out.println(0);",
+    "expectedOutput": "13",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 5 + 8."
+    ]
+  },
+  {
+    "id": "java-004-sum-of-two-numbers",
+    "title": "Level 4: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 6 and 9, print their sum.",
+    "starterCode": "// Print the sum of 6 and 9\nSystem.out.println(0);",
+    "expectedOutput": "15",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 6 + 9."
+    ]
+  },
+  {
+    "id": "java-005-sum-of-two-numbers",
+    "title": "Level 5: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 7 and 10, print their sum.",
+    "starterCode": "// Print the sum of 7 and 10\nSystem.out.println(0);",
+    "expectedOutput": "17",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 7 + 10."
+    ]
+  },
+  {
+    "id": "java-006-sum-of-two-numbers",
+    "title": "Level 6: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 8 and 11, print their sum.",
+    "starterCode": "// Print the sum of 8 and 11\nSystem.out.println(0);",
+    "expectedOutput": "19",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 8 + 11."
+    ]
+  },
+  {
+    "id": "java-007-sum-of-two-numbers",
+    "title": "Level 7: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 9 and 12, print their sum.",
+    "starterCode": "// Print the sum of 9 and 12\nSystem.out.println(0);",
+    "expectedOutput": "21",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 9 + 12."
+    ]
+  },
+  {
+    "id": "java-008-sum-of-two-numbers",
+    "title": "Level 8: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 10 and 13, print their sum.",
+    "starterCode": "// Print the sum of 10 and 13\nSystem.out.println(0);",
+    "expectedOutput": "23",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 10 + 13."
+    ]
+  },
+  {
+    "id": "java-009-sum-of-two-numbers",
+    "title": "Level 9: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 11 and 14, print their sum.",
+    "starterCode": "// Print the sum of 11 and 14\nSystem.out.println(0);",
+    "expectedOutput": "25",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 11 + 14."
+    ]
+  },
+  {
+    "id": "java-010-sum-of-two-numbers",
+    "title": "Level 10: Sum of Two Numbers",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Syntax & Operators",
+    "tags": [
+      "arithmetic",
+      "basics"
+    ],
+    "estimatedMinutes": 5,
+    "description": "Given the numbers 12 and 15, print their sum.",
+    "starterCode": "// Print the sum of 12 and 15\nSystem.out.println(0);",
+    "expectedOutput": "27",
+    "hints": [
+      "Add the two given numbers together.",
+      "Use the + operator.",
+      "The result is 12 + 15."
+    ]
+  },
+  {
+    "id": "java-011-fizzbuzz-1-to-10",
+    "title": "Level 11: FizzBuzz 1 to 10",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 10, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..10\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-012-fizzbuzz-1-to-5",
+    "title": "Level 12: FizzBuzz 1 to 5",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 5, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..5\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-013-fizzbuzz-1-to-6",
+    "title": "Level 13: FizzBuzz 1 to 6",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 6, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..6\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-014-fizzbuzz-1-to-7",
+    "title": "Level 14: FizzBuzz 1 to 7",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 7, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..7\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz\n7",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-015-fizzbuzz-1-to-8",
+    "title": "Level 15: FizzBuzz 1 to 8",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 8, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..8\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-016-fizzbuzz-1-to-9",
+    "title": "Level 16: FizzBuzz 1 to 9",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 9, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..9\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-017-fizzbuzz-1-to-10",
+    "title": "Level 17: FizzBuzz 1 to 10",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 10, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..10\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-018-fizzbuzz-1-to-5",
+    "title": "Level 18: FizzBuzz 1 to 5",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 5, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..5\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-019-fizzbuzz-1-to-6",
+    "title": "Level 19: FizzBuzz 1 to 6",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 6, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..6\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-020-fizzbuzz-1-to-7",
+    "title": "Level 20: FizzBuzz 1 to 7",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Control Flow",
+    "tags": [
+      "loops",
+      "conditionals",
+      "modulo"
+    ],
+    "estimatedMinutes": 8,
+    "description": "For each number from 1 to 7, print the number \u2014 except print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, and \"FizzBuzz\" for multiples of both.",
+    "starterCode": "// Print FizzBuzz for 1..7\nSystem.out.println(\"1\");",
+    "expectedOutput": "1\n2\nFizz\n4\nBuzz\nFizz\n7",
+    "hints": [
+      "Loop from 1 to the target number.",
+      "Check divisibility by 15 first, then 3, then 5.",
+      "Print the number itself when none of the rules apply."
+    ]
+  },
+  {
+    "id": "java-021-reverse-a-string",
+    "title": "Level 21: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"racecar\", print it reversed.",
+    "starterCode": "// Print \"racecar\" reversed\nSystem.out.println(\"racecar\");",
+    "expectedOutput": "racecar",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is racecar."
+    ]
+  },
+  {
+    "id": "java-022-reverse-a-string",
+    "title": "Level 22: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"python\", print it reversed.",
+    "starterCode": "// Print \"python\" reversed\nSystem.out.println(\"python\");",
+    "expectedOutput": "nohtyp",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is nohtyp."
+    ]
+  },
+  {
+    "id": "java-023-reverse-a-string",
+    "title": "Level 23: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"code\", print it reversed.",
+    "starterCode": "// Print \"code\" reversed\nSystem.out.println(\"code\");",
+    "expectedOutput": "edoc",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is edoc."
+    ]
+  },
+  {
+    "id": "java-024-reverse-a-string",
+    "title": "Level 24: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"level\", print it reversed.",
+    "starterCode": "// Print \"level\" reversed\nSystem.out.println(\"level\");",
+    "expectedOutput": "level",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is level."
+    ]
+  },
+  {
+    "id": "java-025-reverse-a-string",
+    "title": "Level 25: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"hello\", print it reversed.",
+    "starterCode": "// Print \"hello\" reversed\nSystem.out.println(\"hello\");",
+    "expectedOutput": "olleh",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is olleh."
+    ]
+  },
+  {
+    "id": "java-026-reverse-a-string",
+    "title": "Level 26: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"racecar\", print it reversed.",
+    "starterCode": "// Print \"racecar\" reversed\nSystem.out.println(\"racecar\");",
+    "expectedOutput": "racecar",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is racecar."
+    ]
+  },
+  {
+    "id": "java-027-reverse-a-string",
+    "title": "Level 27: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"python\", print it reversed.",
+    "starterCode": "// Print \"python\" reversed\nSystem.out.println(\"python\");",
+    "expectedOutput": "nohtyp",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is nohtyp."
+    ]
+  },
+  {
+    "id": "java-028-reverse-a-string",
+    "title": "Level 28: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"code\", print it reversed.",
+    "starterCode": "// Print \"code\" reversed\nSystem.out.println(\"code\");",
+    "expectedOutput": "edoc",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is edoc."
+    ]
+  },
+  {
+    "id": "java-029-reverse-a-string",
+    "title": "Level 29: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"level\", print it reversed.",
+    "starterCode": "// Print \"level\" reversed\nSystem.out.println(\"level\");",
+    "expectedOutput": "level",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is level."
+    ]
+  },
+  {
+    "id": "java-030-reverse-a-string",
+    "title": "Level 30: Reverse a String",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Strings",
+    "tags": [
+      "strings",
+      "reversal"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the string \"hello\", print it reversed.",
+    "starterCode": "// Print \"hello\" reversed\nSystem.out.println(\"hello\");",
+    "expectedOutput": "olleh",
+    "hints": [
+      "Read the string from its last character to the first.",
+      "Many languages support slicing or reversal helpers.",
+      "The answer is olleh."
+    ]
+  },
+  {
+    "id": "java-031-sum-of-array",
+    "title": "Level 31: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10, 12, 14, 16], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "72",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 72."
+    ]
+  },
+  {
+    "id": "java-032-sum-of-array",
+    "title": "Level 32: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "30",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 30."
+    ]
+  },
+  {
+    "id": "java-033-sum-of-array",
+    "title": "Level 33: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10, 12], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "42",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 42."
+    ]
+  },
+  {
+    "id": "java-034-sum-of-array",
+    "title": "Level 34: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10, 12, 14], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "56",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 56."
+    ]
+  },
+  {
+    "id": "java-035-sum-of-array",
+    "title": "Level 35: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10, 12, 14, 16], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "72",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 72."
+    ]
+  },
+  {
+    "id": "java-036-sum-of-array",
+    "title": "Level 36: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "30",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 30."
+    ]
+  },
+  {
+    "id": "java-037-sum-of-array",
+    "title": "Level 37: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10, 12], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "42",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 42."
+    ]
+  },
+  {
+    "id": "java-038-sum-of-array",
+    "title": "Level 38: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10, 12, 14], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "56",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 56."
+    ]
+  },
+  {
+    "id": "java-039-sum-of-array",
+    "title": "Level 39: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10, 12, 14, 16], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "72",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 72."
+    ]
+  },
+  {
+    "id": "java-040-sum-of-array",
+    "title": "Level 40: Sum of Array",
+    "difficulty": "easy",
+    "language": "java",
+    "category": "Collections & Arrays",
+    "tags": [
+      "arrays",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given the array [2, 4, 6, 8, 10], print the sum of all its elements.",
+    "starterCode": "// Sum the array\nSystem.out.println(0);",
+    "expectedOutput": "30",
+    "hints": [
+      "Iterate over every element.",
+      "Accumulate into a running total.",
+      "The total is 30."
+    ]
+  },
+  {
+    "id": "java-041-sum-dictionary-values",
+    "title": "Level 41: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [2, 6, 7], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "15",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 15."
+    ]
+  },
+  {
+    "id": "java-042-sum-dictionary-values",
+    "title": "Level 42: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [3, 1, 1], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "5",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 5."
+    ]
+  },
+  {
+    "id": "java-043-sum-dictionary-values",
+    "title": "Level 43: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [4, 3, 4], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "11",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 11."
+    ]
+  },
+  {
+    "id": "java-044-sum-dictionary-values",
+    "title": "Level 44: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [5, 5, 7], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "17",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 17."
+    ]
+  },
+  {
+    "id": "java-045-sum-dictionary-values",
+    "title": "Level 45: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [1, 7, 1], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "9",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 9."
+    ]
+  },
+  {
+    "id": "java-046-sum-dictionary-values",
+    "title": "Level 46: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [2, 2, 4], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "8",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 8."
+    ]
+  },
+  {
+    "id": "java-047-sum-dictionary-values",
+    "title": "Level 47: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [3, 4, 7], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "14",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 14."
+    ]
+  },
+  {
+    "id": "java-048-sum-dictionary-values",
+    "title": "Level 48: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [4, 6, 1], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "11",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 11."
+    ]
+  },
+  {
+    "id": "java-049-sum-dictionary-values",
+    "title": "Level 49: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [5, 1, 4], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "10",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 10."
+    ]
+  },
+  {
+    "id": "java-050-sum-dictionary-values",
+    "title": "Level 50: Sum Dictionary Values",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Dictionaries & Sets",
+    "tags": [
+      "dictionaries",
+      "sum"
+    ],
+    "estimatedMinutes": 8,
+    "description": "Given a dictionary with values [1, 3, 7], print the sum of all values.",
+    "starterCode": "// Sum all values\nSystem.out.println(0);",
+    "expectedOutput": "11",
+    "hints": [
+      "Iterate over the dictionary's values.",
+      "Add each value to a running total.",
+      "The total is 11."
+    ]
+  },
+  {
+    "id": "java-051-square-plus-one",
+    "title": "Level 51: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 2 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "5",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 2 gives 5."
+    ]
+  },
+  {
+    "id": "java-052-square-plus-one",
+    "title": "Level 52: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 3 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "10",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 3 gives 10."
+    ]
+  },
+  {
+    "id": "java-053-square-plus-one",
+    "title": "Level 53: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 4 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "17",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 4 gives 17."
+    ]
+  },
+  {
+    "id": "java-054-square-plus-one",
+    "title": "Level 54: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 5 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "26",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 5 gives 26."
+    ]
+  },
+  {
+    "id": "java-055-square-plus-one",
+    "title": "Level 55: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 6 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "37",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 6 gives 37."
+    ]
+  },
+  {
+    "id": "java-056-square-plus-one",
+    "title": "Level 56: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 7 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "50",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 7 gives 50."
+    ]
+  },
+  {
+    "id": "java-057-square-plus-one",
+    "title": "Level 57: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 8 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "65",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 8 gives 65."
+    ]
+  },
+  {
+    "id": "java-058-square-plus-one",
+    "title": "Level 58: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 9 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "82",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 9 gives 82."
+    ]
+  },
+  {
+    "id": "java-059-square-plus-one",
+    "title": "Level 59: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 10 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "101",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 10 gives 101."
+    ]
+  },
+  {
+    "id": "java-060-square-plus-one",
+    "title": "Level 60: Square Plus One",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Functions & Scope",
+    "tags": [
+      "functions",
+      "arithmetic"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Define a function that returns x*x + 1. Call it with 1 and print the result.",
+    "starterCode": "// Define and call the function\nSystem.out.println(0);",
+    "expectedOutput": "2",
+    "hints": [
+      "Create a function taking one parameter.",
+      "Return x*x + 1.",
+      "Calling with 1 gives 2."
+    ]
+  },
+  {
+    "id": "java-061-factorial",
+    "title": "Level 61: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 2 recursively and print it.",
+    "starterCode": "// Recursive factorial of 2\nSystem.out.println(0);",
+    "expectedOutput": "2",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "2! = 2."
+    ]
+  },
+  {
+    "id": "java-062-factorial",
+    "title": "Level 62: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 3 recursively and print it.",
+    "starterCode": "// Recursive factorial of 3\nSystem.out.println(0);",
+    "expectedOutput": "6",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "3! = 6."
+    ]
+  },
+  {
+    "id": "java-063-factorial",
+    "title": "Level 63: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 4 recursively and print it.",
+    "starterCode": "// Recursive factorial of 4\nSystem.out.println(0);",
+    "expectedOutput": "24",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "4! = 24."
+    ]
+  },
+  {
+    "id": "java-064-factorial",
+    "title": "Level 64: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 5 recursively and print it.",
+    "starterCode": "// Recursive factorial of 5\nSystem.out.println(0);",
+    "expectedOutput": "120",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "5! = 120."
+    ]
+  },
+  {
+    "id": "java-065-factorial",
+    "title": "Level 65: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 6 recursively and print it.",
+    "starterCode": "// Recursive factorial of 6\nSystem.out.println(0);",
+    "expectedOutput": "720",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "6! = 720."
+    ]
+  },
+  {
+    "id": "java-066-factorial",
+    "title": "Level 66: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 1 recursively and print it.",
+    "starterCode": "// Recursive factorial of 1\nSystem.out.println(0);",
+    "expectedOutput": "1",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "1! = 1."
+    ]
+  },
+  {
+    "id": "java-067-factorial",
+    "title": "Level 67: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 2 recursively and print it.",
+    "starterCode": "// Recursive factorial of 2\nSystem.out.println(0);",
+    "expectedOutput": "2",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "2! = 2."
+    ]
+  },
+  {
+    "id": "java-068-factorial",
+    "title": "Level 68: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 3 recursively and print it.",
+    "starterCode": "// Recursive factorial of 3\nSystem.out.println(0);",
+    "expectedOutput": "6",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "3! = 6."
+    ]
+  },
+  {
+    "id": "java-069-factorial",
+    "title": "Level 69: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 4 recursively and print it.",
+    "starterCode": "// Recursive factorial of 4\nSystem.out.println(0);",
+    "expectedOutput": "24",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "4! = 24."
+    ]
+  },
+  {
+    "id": "java-070-factorial",
+    "title": "Level 70: Factorial",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Recursion",
+    "tags": [
+      "recursion",
+      "factorial"
+    ],
+    "estimatedMinutes": 12,
+    "description": "Compute the factorial of 5 recursively and print it.",
+    "starterCode": "// Recursive factorial of 5\nSystem.out.println(0);",
+    "expectedOutput": "120",
+    "hints": [
+      "Base case: factorial of 0 or 1 is 1.",
+      "Recursive case: n * factorial(n-1).",
+      "5! = 120."
+    ]
+  },
+  {
+    "id": "java-071-sort-and-print",
+    "title": "Level 71: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [6, 41, 28, 18, 3, 1, 22, 50, 9], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "1 3 6 9 18 22 28 41 50",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 1 3 6 9 18 22 28 41 50."
+    ]
+  },
+  {
+    "id": "java-072-sort-and-print",
+    "title": "Level 72: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [41, 17, 11, 48, 29, 36], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "11 17 29 36 41 48",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 11 17 29 36 41 48."
+    ]
+  },
+  {
+    "id": "java-073-sort-and-print",
+    "title": "Level 73: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [46, 28, 36, 1, 8, 5, 45], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "1 5 8 28 36 45 46",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 1 5 8 28 36 45 46."
+    ]
+  },
+  {
+    "id": "java-074-sort-and-print",
+    "title": "Level 74: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [10, 35, 3, 24, 38, 36, 10, 28], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "3 10 10 24 28 35 36 38",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 3 10 10 24 28 35 36 38."
+    ]
+  },
+  {
+    "id": "java-075-sort-and-print",
+    "title": "Level 75: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [9, 3, 20, 24, 3, 23, 14, 44, 16], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "3 3 9 14 16 20 23 24 44",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 3 3 9 14 16 20 23 24 44."
+    ]
+  },
+  {
+    "id": "java-076-sort-and-print",
+    "title": "Level 76: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [43, 7, 23, 50, 36, 27], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "7 23 27 36 43 50",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 7 23 27 36 43 50."
+    ]
+  },
+  {
+    "id": "java-077-sort-and-print",
+    "title": "Level 77: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [40, 48, 10, 16, 11, 12, 27], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "10 11 12 16 27 40 48",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 10 11 12 16 27 40 48."
+    ]
+  },
+  {
+    "id": "java-078-sort-and-print",
+    "title": "Level 78: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [2, 12, 48, 22, 27, 43, 48, 16], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "2 12 16 22 27 43 48 48",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 2 12 16 22 27 43 48 48."
+    ]
+  },
+  {
+    "id": "java-079-sort-and-print",
+    "title": "Level 79: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [18, 11, 45, 7, 25, 3, 31, 15, 13], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "3 7 11 13 15 18 25 31 45",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 3 7 11 13 15 18 25 31 45."
+    ]
+  },
+  {
+    "id": "java-080-sort-and-print",
+    "title": "Level 80: Sort and Print",
+    "difficulty": "medium",
+    "language": "java",
+    "category": "Searching & Sorting",
+    "tags": [
+      "sorting",
+      "arrays"
+    ],
+    "estimatedMinutes": 10,
+    "description": "Given the array [30, 23, 20, 15, 15, 2], sort it ascending and print the elements space-separated.",
+    "starterCode": "// Sort the array\nSystem.out.println(0);",
+    "expectedOutput": "2 15 15 20 23 30",
+    "hints": [
+      "Use a built-in sort or implement one.",
+      "Print elements separated by spaces.",
+      "Sorted: 2 15 15 20 23 30."
+    ]
+  },
+  {
+    "id": "java-081-reverse-via-stack",
+    "title": "Level 81: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [4, 7, 6, 5, 2] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "2 5 6 7 4",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 2 5 6 7 4."
+    ]
+  },
+  {
+    "id": "java-082-reverse-via-stack",
+    "title": "Level 82: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [5, 6, 9, 7, 9, 6] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "6 9 7 9 6 5",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 6 9 7 9 6 5."
+    ]
+  },
+  {
+    "id": "java-083-reverse-via-stack",
+    "title": "Level 83: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [1, 2, 5, 3, 5, 1, 2] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "2 1 5 3 5 2 1",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 2 1 5 3 5 2 1."
+    ]
+  },
+  {
+    "id": "java-084-reverse-via-stack",
+    "title": "Level 84: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [7, 6, 6, 7] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "7 6 6 7",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 7 6 6 7."
+    ]
+  },
+  {
+    "id": "java-085-reverse-via-stack",
+    "title": "Level 85: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [9, 2, 7, 4, 5] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "5 4 7 2 9",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 5 4 7 2 9."
+    ]
+  },
+  {
+    "id": "java-086-reverse-via-stack",
+    "title": "Level 86: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [1, 7, 1, 9, 9, 4] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "4 9 9 1 7 1",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 4 9 9 1 7 1."
+    ]
+  },
+  {
+    "id": "java-087-reverse-via-stack",
+    "title": "Level 87: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [6, 7, 2, 6, 6, 2, 5] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "5 2 6 6 2 7 6",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 5 2 6 6 2 7 6."
+    ]
+  },
+  {
+    "id": "java-088-reverse-via-stack",
+    "title": "Level 88: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [9, 5, 7, 6] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "6 7 5 9",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 6 7 5 9."
+    ]
+  },
+  {
+    "id": "java-089-reverse-via-stack",
+    "title": "Level 89: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [7, 5, 9, 3, 4] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "4 3 9 5 7",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 4 3 9 5 7."
+    ]
+  },
+  {
+    "id": "java-090-reverse-via-stack",
+    "title": "Level 90: Reverse via Stack",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Data Structures",
+    "tags": [
+      "stack",
+      "data-structures"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Use a stack to reverse the array [7, 7, 3, 5, 7, 9] and print the result space-separated.",
+    "starterCode": "// Reverse using a stack\nSystem.out.println(0);",
+    "expectedOutput": "9 7 5 3 7 7",
+    "hints": [
+      "Push all elements onto a stack.",
+      "Pop them off to get reversed order.",
+      "Reversed: 9 7 5 3 7 7."
+    ]
+  },
+  {
+    "id": "java-091-fibonacci-number",
+    "title": "Level 91: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 8-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(8)\nSystem.out.println(0);",
+    "expectedOutput": "21",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(8) = 21."
+    ]
+  },
+  {
+    "id": "java-092-fibonacci-number",
+    "title": "Level 92: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 9-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(9)\nSystem.out.println(0);",
+    "expectedOutput": "34",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(9) = 34."
+    ]
+  },
+  {
+    "id": "java-093-fibonacci-number",
+    "title": "Level 93: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 10-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(10)\nSystem.out.println(0);",
+    "expectedOutput": "55",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(10) = 55."
+    ]
+  },
+  {
+    "id": "java-094-fibonacci-number",
+    "title": "Level 94: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 11-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(11)\nSystem.out.println(0);",
+    "expectedOutput": "89",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(11) = 89."
+    ]
+  },
+  {
+    "id": "java-095-fibonacci-number",
+    "title": "Level 95: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 12-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(12)\nSystem.out.println(0);",
+    "expectedOutput": "144",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(12) = 144."
+    ]
+  },
+  {
+    "id": "java-096-fibonacci-number",
+    "title": "Level 96: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 5-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(5)\nSystem.out.println(0);",
+    "expectedOutput": "5",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(5) = 5."
+    ]
+  },
+  {
+    "id": "java-097-fibonacci-number",
+    "title": "Level 97: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 6-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(6)\nSystem.out.println(0);",
+    "expectedOutput": "8",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(6) = 8."
+    ]
+  },
+  {
+    "id": "java-098-fibonacci-number",
+    "title": "Level 98: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 7-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(7)\nSystem.out.println(0);",
+    "expectedOutput": "13",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(7) = 13."
+    ]
+  },
+  {
+    "id": "java-099-fibonacci-number",
+    "title": "Level 99: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 8-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(8)\nSystem.out.println(0);",
+    "expectedOutput": "21",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(8) = 21."
+    ]
+  },
+  {
+    "id": "java-100-fibonacci-number",
+    "title": "Level 100: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 9-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(9)\nSystem.out.println(0);",
+    "expectedOutput": "34",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(9) = 34."
+    ]
+  },
+  {
+    "id": "java-101-fibonacci-number",
+    "title": "Level 101: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 10-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(10)\nSystem.out.println(0);",
+    "expectedOutput": "55",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(10) = 55."
+    ]
+  },
+  {
+    "id": "java-102-fibonacci-number",
+    "title": "Level 102: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 11-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(11)\nSystem.out.println(0);",
+    "expectedOutput": "89",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(11) = 89."
+    ]
+  },
+  {
+    "id": "java-103-fibonacci-number",
+    "title": "Level 103: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 12-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(12)\nSystem.out.println(0);",
+    "expectedOutput": "144",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(12) = 144."
+    ]
+  },
+  {
+    "id": "java-104-fibonacci-number",
+    "title": "Level 104: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 5-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(5)\nSystem.out.println(0);",
+    "expectedOutput": "5",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(5) = 5."
+    ]
+  },
+  {
+    "id": "java-105-fibonacci-number",
+    "title": "Level 105: Fibonacci Number",
+    "difficulty": "hard",
+    "language": "java",
+    "category": "Algorithms",
+    "tags": [
+      "algorithms",
+      "fibonacci"
+    ],
+    "estimatedMinutes": 15,
+    "description": "Print the 6-th Fibonacci number (0-indexed: F0=0, F1=1).",
+    "starterCode": "// Compute Fibonacci(6)\nSystem.out.println(0);",
+    "expectedOutput": "8",
+    "hints": [
+      "Fibonacci: F(n) = F(n-1) + F(n-2).",
+      "Base cases: F(0)=0, F(1)=1.",
+      "F(6) = 8."
+    ]
+  }
+]
