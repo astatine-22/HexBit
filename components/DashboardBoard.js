@@ -13,6 +13,7 @@ import KineticTextReveal from "@/components/ui/kinetic-text-reveal";
 import ScrollBasedVelocity from "@/components/ui/scroll-based-velocity";
 import GithubCalendar from "@/components/ui/github-calendar";
 import MusicPlayer from "@/components/ui/music-player";
+import OrbitCardStack from "@/components/ui/orbit-card-stack";
 
 const pad = (value) => String(value).padStart(2, "0");
 
@@ -509,6 +510,46 @@ export default function DashboardBoard() {
 
 
       </div>
+
+      {/* Orbit Card Stack - Featured Drills Fan-Out */}
+      <section className="relative overflow-hidden rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-accent font-semibold">
+                Orbit Card Stack
+              </span>
+              <span className="rounded-full bg-accent/10 px-2 py-0.5 font-mono text-[7px] uppercase tracking-wider text-accent border border-accent/20">
+                Studio Library Fan-Out
+              </span>
+            </div>
+            <h3 className="mt-1 font-display text-[22px] text-paper">
+              Recommended Drills & Challenge Pressings
+            </h3>
+            <p className="font-mono text-[11px] text-paper/50">
+              Hover or scrub using arrow keys to orbit and inspect challenge cards.
+            </p>
+          </div>
+          <span className="font-mono text-[9px] uppercase tracking-wider text-paper/30">
+            Hover to fan out · Click to solve
+          </span>
+        </div>
+
+        <OrbitCardStack
+          items={challenges.slice(0, 5).map((c, i) => ({
+            id: c.id,
+            title: c.title,
+            role: `${c.language.toUpperCase()} · ${c.category || "CORE"}`,
+            description: c.description,
+            stat: c.difficulty.toUpperCase(),
+            accent: ["#d9f65a", "#78dcca", "#b9a7ff", "#f8d66d", "#ff9d77"][i % 5],
+            href: `/challenges/${c.id}/solve`,
+            solved: solvedSet.has(c.id),
+          }))}
+          defaultActiveIndex={2}
+          spread={150}
+        />
+      </section>
 
       {/* Track progress grid */}
       <section className="rounded-[3px] border border-paper/10 bg-ink-2 p-6 lg:p-8">
