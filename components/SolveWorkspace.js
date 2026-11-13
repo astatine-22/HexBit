@@ -22,6 +22,7 @@ import {
   recordAttempt,
   recordHintRequest,
 } from "@/lib/progress";
+import { isAudioSupported, playLinerNotes, stopLinerNotes } from "@/lib/audio";
 import { getLanguage } from "@/lib/ui";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
@@ -90,6 +91,9 @@ export default function SolveWorkspace({ challenge }) {
   const [explanation, setExplanation] = useState(null);
   const [summary, setSummary] = useState(null);
   const [next, setNext] = useState(null);
+  const [linerState, setLinerState] = useState("idle");
+  const [linerText, setLinerText] = useState(null);
+  const [linerError, setLinerError] = useState("");
   const hintRequestCount = useRef(0);
   const editorRef = useRef(null);
   const shellRef = useRef(null);
@@ -131,9 +135,10 @@ export default function SolveWorkspace({ challenge }) {
   }, []);
 
   useEffect(() => {
-    setSolved(getSolvedChallengeIds().includes(challenge.id));
-    setAttempts(getAttemptCount(challenge.id));
-  }, [challenge.id]);
+    return () => {
+      stopLinerNotes();
+    };
+  }, []);
 
   function handleEditorWillMount(monaco) {
     monaco.editor.defineTheme("codementor", {
@@ -528,6 +533,57 @@ export default function SolveWorkspace({ challenge }) {
     }
   }
 
+  async function handleLinerNotes() {
+    if (linerState === "playing") {
+      stopLinerNotes();
+      setLinerState("idle");
+      return;
+    }
+
+    if (linerState === "loading") return;
+
+    setLinerState("loading");
+    setLinerError("");
+
+    try {
+      const res = await fetch("/api/liner-notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: challenge.title,
+          language: challenge.language,
+          description: challenge.description,
+          category: challenge.category,
+        }),
+      });
+      const data = await res.json();
+      const text = typeof data?.text === "string" && data.text.trim() ? data.text.trim() : "";
+
+      if (!text) {
+        throw new Error("No liner notes returned.");
+      }
+
+      setLinerText(text);
+
+      const started = playLinerNotes(text, {
+        onStart: () => setLinerState("playing"),
+        onEnd: () => setLinerState("idle"),
+        onError: () => {
+          setLinerState("idle");
+          // Keep linerText visible; only note that audio output was muted/unsupported
+          setLinerError("Spoken audio was blocked or unavailable on this device. Showing text below:");
+        },
+      });
+
+      if (!started) {
+        setLinerState("idle");
+        setLinerError("Speech synthesis is not supported on this device. Showing text below:");
+      }
+    } catch (error) {
+      setLinerState("idle");
+      setLinerError(error?.message || "Could not load liner notes.");
+    }
+  }
   async function handleRequestHint({ snippet } = {}) {
     // TODO: replace with real API call to /api/hint
     const hint = await requestHint({
@@ -598,6 +654,36 @@ export default function SolveWorkspace({ challenge }) {
             {solved ? "Solved" : "In progress"}
           </span>
 
+          <button
+            type="button"
+            onClick={handleLinerNotes}
+            disabled={linerState === "loading"}
+            title="Spoken audio intuition"
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.16em] transition-colors ${
+              linerState === "playing"
+                ? "border-accent text-accent bg-accent/10"
+                : linerState === "loading"
+                  ? "border-paper/20 text-paper/40"
+                  : "border-paper/20 text-paper/70 hover:border-accent/50 hover:text-accent"
+            }`}
+          >
+            {linerState === "loading" ? (
+              <span className="h-3 w-3 animate-spin rounded-full border border-paper/20 border-t-accent" />
+            ) : linerState === "playing" ? (
+              <span className="flex items-end gap-0.5" aria-hidden="true">
+                <span className="h-2 w-0.5 animate-pulse bg-accent" />
+                <span className="h-3 w-0.5 animate-pulse bg-accent [animation-delay:120ms]" />
+                <span className="h-2.5 w-0.5 animate-pulse bg-accent [animation-delay:240ms]" />
+              </span>
+            ) : (
+              <span aria-hidden="true">♪</span>
+            )}
+            {linerState === "playing" ? "Stop" : "Liner Notes"}
+            {linerState === "idle" ? (
+              <span className="text-paper/30">(&gt; Audio)</span>
+            ) : null}
+          </button>
+
           <Link
             href="/challenges"
             className="hidden font-mono text-[9px] uppercase tracking-[0.18em] text-paper/35 transition-colors hover:text-paper/70 md:inline"
@@ -608,6 +694,31 @@ export default function SolveWorkspace({ challenge }) {
           <UserMenu />
         </div>
       </header>
+
+      {linerText || linerError ? (
+        <div className="border-b border-paper/10 bg-ink-2/80 px-4 py-2.5 backdrop-blur lg:px-6">
+          <div className="mx-auto flex max-w-7xl items-start gap-3">
+            <span className="mt-0.5 shrink-0 font-mono text-[8px] uppercase tracking-[0.2em] text-accent">
+              Liner notes
+            </span>
+            <div className="flex-1 space-y-1">
+              {linerError && !linerText ? (
+                <p className="text-[12px] leading-relaxed text-[#ee917c]">{linerError}</p>
+              ) : null}
+              {linerText ? (
+                <p className="text-[12px] leading-relaxed text-paper/85 font-mono">
+                  &ldquo;{linerText}&rdquo;
+                </p>
+              ) : null}
+              {linerError && linerText ? (
+                <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-paper/40">
+                  {linerError}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <GuestBanner />
 
